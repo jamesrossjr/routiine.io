@@ -53,5 +53,5 @@
 
 
 <style scoped>
-/* Global section animations or overrides can go here */
+  /* Global Styles */
 </style>
