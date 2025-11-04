@@ -54,7 +54,7 @@
               <li class="flex justify-between">
                 <span>Handled Price Objection</span>
                 <UBadge
-                  color="emerald"
+                  color="success"
                   variant="subtle"
                 >
                   +3pts
@@ -63,7 +63,7 @@
               <li class="flex justify-between">
                 <span>Improved Signal Discovery</span>
                 <UBadge
-                  color="emerald"
+                  color="success"
                   variant="subtle"
                 >
                   +2pts
@@ -72,7 +72,7 @@
               <li class="flex justify-between">
                 <span>Missed Early Framing</span>
                 <UBadge
-                  color="rose"
+                  color="error"
                   variant="subtle"
                 >
                   -1pt
@@ -81,7 +81,7 @@
               <li class="flex justify-between">
                 <span>Follow-Up Consistency</span>
                 <UBadge
-                  color="yellow"
+                  color="warning"
                   variant="subtle"
                 >
                   Neutral
@@ -90,7 +90,7 @@
               <li class="flex justify-between">
                 <span>Used Decision Mapping</span>
                 <UBadge
-                  color="emerald"
+                  color="success"
                   variant="subtle"
                 >
                   +2pts

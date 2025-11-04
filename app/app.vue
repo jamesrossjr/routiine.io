@@ -24,8 +24,7 @@ useSeoMeta({
   ogUrl: 'https://routiine.io',
   ogType: 'website',
   twitterTitle: 'Routiine.io - Sales Reinvented',
-  twitterDescription: 'Routiine is a sales platform that helps you close deals faster and more efficiently.',
-  twitterUrl: 'https://routiine.io'
+  twitterDescription: 'Routiine is a sales platform that helps you close deals faster and more efficiently.'
 })
 
 const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'), {

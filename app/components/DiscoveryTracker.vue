@@ -348,7 +348,7 @@ onBeforeUnmount(() => {
 <template>
   <UContainer class="py-12 flex justify-center items-center">
     <UCard
-      :ui="{ base: 'shadow-none text-center' }"
+      :ui="{ root: 'shadow-none text-center' }"
       class="bg-transparent border-0"
     >
       <!-- Outer container styled with dark/light mode support -->

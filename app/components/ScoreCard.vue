@@ -312,10 +312,7 @@ onBeforeUnmount(cleanup)
   <UContainer class="py-12 flex justify-center items-center">
     <UCard
       :ui="{
-        base: 'shadow-none text-center',
-        rounded: 'rounded-lg',
-        shadow: '',
-        padding: 'p-4'
+        root: 'shadow-none text-center rounded-lg p-4'
       }"
       class="bg-transparent border-0"
     >
@@ -431,7 +428,7 @@ onBeforeUnmount(cleanup)
               </span>
               <UBadge
                 size="xs"
-                :color="activityTrend >= 0 ? 'teal' : 'red'"
+                :color="activityTrend >= 0 ? 'success' : 'error'"
                 variant="subtle"
                 class="w-2 h-2 p-0 rounded-full"
               />
@@ -462,7 +459,7 @@ onBeforeUnmount(cleanup)
               </span>
               <UBadge
                 size="xs"
-                :color="conversionTrend >= 0 ? 'teal' : 'red'"
+                :color="conversionTrend >= 0 ? 'success' : 'error'"
                 variant="subtle"
                 class="w-2 h-2 p-0 rounded-full"
               />
@@ -477,7 +474,7 @@ onBeforeUnmount(cleanup)
               </p>
               <UBadge
                 size="xs"
-                color="sky"
+                color="info"
                 variant="subtle"
                 class="font-semibold ml-1"
                 style="margin-right: 9px;"
