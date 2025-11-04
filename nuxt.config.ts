@@ -28,6 +28,15 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-07-11',
 
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      failOnError: true // default true, but make explicit
+      // skip routes if needed:
+      // ignore: ['/some/dynamic/route']
+    }
+  },
+
   typescript: {
     strict: false,
     typeCheck: true,
@@ -36,15 +45,6 @@ export default defineNuxtConfig({
       compilerOptions: {
         skipLibCheck: true
       }
-    }
-  },
-
-  nitro: {
-    prerender: {
-      crawlLinks: true,
-      failOnError: true // default true, but make explicit
-      // skip routes if needed:
-      // ignore: ['/some/dynamic/route']
     }
   },
 
