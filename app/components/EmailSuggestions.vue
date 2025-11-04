@@ -256,6 +256,7 @@ export default {
       required: true
     }
   },
+  emits: ['copied', 'email-selected'],
   data() {
     return {
       isLoading: false,

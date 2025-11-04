@@ -251,7 +251,8 @@ function toggleColorMode() {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
 }
 
-function addSignal(type: 'positive' | 'negative', name: string, impact: number) {
+// Placeholder for future manual signal addition
+function _addSignal(type: 'positive' | 'negative', name: string, impact: number) {
   signals.value.push({
     type,
     name,

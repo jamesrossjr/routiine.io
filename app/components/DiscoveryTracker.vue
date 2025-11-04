@@ -3,7 +3,8 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import Chart from 'chart.js/auto'
 import type { Chart as ChartJS } from 'chart.js'
 
-const containerClass = computed(() =>
+// Placeholder for future theme support
+const _containerClass = computed(() =>
   colorMode.value === 'dark'
     ? 'bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white'
     : 'bg-gradient-to-b from-slate-100 via-slate-100 to-slate-100 text-slate-900'

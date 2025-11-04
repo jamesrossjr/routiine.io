@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const columns = [{
+// Placeholder for future footer navigation
+const _columns = [{
   label: 'Resources',
   children: [{
     label: 'Help center'
@@ -37,10 +38,10 @@ const columns = [{
 
 const toast = useToast()
 
-const email = ref('')
+const _email = ref('')
 const loading = ref(false)
 
-function onSubmit() {
+function _onSubmit() {
   loading.value = true
 
   toast.add({

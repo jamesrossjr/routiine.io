@@ -1,4 +1,5 @@
 // utils/crmAdapters.js
+/* eslint no-unused-vars: ["error", { "argsIgnorePattern": "^_" }] */
 
 /**
  * Factory function to get the appropriate CRM adapter
@@ -27,19 +28,19 @@ class BaseCrmAdapter {
   }
 
   // Common methods for all adapters
-  async fetchData(entityType, query = {}) {
+  async fetchData(_entityType, _query = {}) {
     throw new Error('Method not implemented')
   }
 
-  async createRecord(entityType, data) {
+  async createRecord(_entityType, _data) {
     throw new Error('Method not implemented')
   }
 
-  async updateRecord(entityType, id, data) {
+  async updateRecord(_entityType, _id, _data) {
     throw new Error('Method not implemented')
   }
 
-  async deleteRecord(entityType, id) {
+  async deleteRecord(_entityType, _id) {
     throw new Error('Method not implemented')
   }
 
@@ -110,7 +111,7 @@ class SalesforceAdapter extends BaseCrmAdapter {
     }
   }
 
-  async fetchLeads(query) {
+  async fetchLeads(_query) {
     // In a real implementation, this would use the Salesforce API
     // This is simplified for demonstration
     const mockLeads = [
@@ -140,7 +141,7 @@ class SalesforceAdapter extends BaseCrmAdapter {
     return mockLeads.map(lead => this.normalizeData('lead', lead))
   }
 
-  async fetchOpportunities(query) {
+  async fetchOpportunities(_query) {
     // Mock implementation
     const mockOpportunities = [
       {
@@ -264,7 +265,7 @@ class ZohoAdapter extends BaseCrmAdapter {
     this.name = 'zoho'
   }
 
-  async connect(credentials) {
+  async connect(_credentials) {
     // Implementation similar to other adapters
     return { success: true, token: 'mock_zoho_token' }
   }
@@ -281,7 +282,7 @@ class PipedriveAdapter extends BaseCrmAdapter {
     this.name = 'pipedrive'
   }
 
-  async connect(credentials) {
+  async connect(_credentials) {
     // Implementation similar to other adapters
     return { success: true, token: 'mock_pipedrive_token' }
   }
