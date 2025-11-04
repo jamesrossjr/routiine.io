@@ -32,6 +32,7 @@ export const activityTypeEnum = pgEnum('activity_type', ['call', 'email', 'meeti
 export const subscriptionStatusEnum = pgEnum('subscription_status', ['active', 'cancelled', 'expired', 'trial'])
 export const billingCycleEnum = pgEnum('billing_cycle', ['monthly', 'yearly'])
 export const intensityLevelEnum = pgEnum('intensity_level', ['minimal', 'mild', 'moderate', 'significant', 'severe'])
+export const documentTypeEnum = pgEnum('document_type', ['pdf', 'proposal', 'presentation', 'contract', 'other'])
 
 // Users Table
 export const users = pgTable('users', {
@@ -280,6 +281,27 @@ export const dailyMetrics = pgTable('daily_metrics', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })
 
+// Documents Table (for tracked document sharing)
+export const documents = pgTable('documents', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  clientId: uuid('client_id').references(() => clients.id, { onDelete: 'cascade' }),
+  opportunityId: uuid('opportunity_id').references(() => opportunities.id, { onDelete: 'set null' }),
+  fileName: varchar('file_name', { length: 255 }).notNull(),
+  originalName: varchar('original_name', { length: 255 }).notNull(),
+  documentType: documentTypeEnum('document_type').notNull().default('other'),
+  mimeType: varchar('mime_type', { length: 100 }).notNull(),
+  fileSize: integer('file_size').notNull(), // in bytes
+  filePath: text('file_path').notNull(), // Storage path or URL
+  trackingId: varchar('tracking_id', { length: 255 }).notNull().unique(),
+  viewCount: integer('view_count').notNull().default(0),
+  lastViewedAt: timestamp('last_viewed_at'),
+  metadata: jsonb('metadata'), // Additional document info
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
 // Relations
 export const usersRelations = relations(users, ({ many, one }) => ({
   signals: many(signals),
@@ -295,6 +317,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   subscription: one(subscriptions),
   opportunities: many(opportunities),
   dailyMetrics: many(dailyMetrics),
+  documents: many(documents),
 }))
 
 export const clientsRelations = relations(clients, ({ many, one }) => ({
@@ -307,6 +330,7 @@ export const clientsRelations = relations(clients, ({ many, one }) => ({
   activities: many(activities),
   tasks: many(tasks),
   signalAssessments: many(signalAssessments),
+  documents: many(documents),
 }))
 
 export const opportunitiesRelations = relations(opportunities, ({ one, many }) => ({
@@ -319,6 +343,7 @@ export const opportunitiesRelations = relations(opportunities, ({ one, many }) =
     references: [users.id],
   }),
   signals: many(signals),
+  documents: many(documents),
 }))
 
 export const signalsRelations = relations(signals, ({ one }) => ({
@@ -332,6 +357,21 @@ export const signalsRelations = relations(signals, ({ one }) => ({
   }),
   opportunity: one(opportunities, {
     fields: [signals.opportunityId],
+    references: [opportunities.id],
+  }),
+}))
+
+export const documentsRelations = relations(documents, ({ one }) => ({
+  user: one(users, {
+    fields: [documents.userId],
+    references: [users.id],
+  }),
+  client: one(clients, {
+    fields: [documents.clientId],
+    references: [clients.id],
+  }),
+  opportunity: one(opportunities, {
+    fields: [documents.opportunityId],
     references: [opportunities.id],
   }),
 }))
