@@ -39,12 +39,15 @@ export default defineNuxtConfig({
 
   typescript: {
     strict: false,
-    typeCheck: true,
+    typeCheck: false,
     shim: false,
     tsConfig: {
       compilerOptions: {
         skipLibCheck: true
-      }
+      },
+      exclude: [
+        'node_modules'
+      ]
     }
   },
 
