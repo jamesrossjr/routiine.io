@@ -57,6 +57,18 @@ export const sessions = pgTable('sessions', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })
 
+// Password Reset Tokens Table
+export const passwordResetTokens = pgTable('password_reset_tokens', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  token: varchar('token', { length: 255 }).notNull().unique(),
+  expiresAt: timestamp('expires_at').notNull(),
+  usedAt: timestamp('used_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
 // OAuth Connections Table
 export const oauthConnections = pgTable('oauth_connections', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -279,6 +291,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   crmConnections: many(crmConnections),
   sessions: many(sessions),
   oauthConnections: many(oauthConnections),
+  passwordResetTokens: many(passwordResetTokens),
   subscription: one(subscriptions),
   opportunities: many(opportunities),
   dailyMetrics: many(dailyMetrics),
