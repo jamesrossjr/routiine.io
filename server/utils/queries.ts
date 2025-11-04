@@ -223,16 +223,6 @@ export async function getUserTasks(
 }
 
 /**
- * Get latest momentum score for user
- */
-export async function getLatestMomentumScore(userId: string) {
-  return await db.query.momentumScores.findFirst({
-    where: eq(schema.momentumScores.userId, userId),
-    orderBy: [desc(schema.momentumScores.calculatedAt)]
-  })
-}
-
-/**
  * Get momentum score history for user
  */
 export async function getMomentumScoreHistory(
