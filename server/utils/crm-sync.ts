@@ -125,7 +125,7 @@ export async function syncSalesforceData(
   } catch (error: unknown) {
     console.error('Salesforce sync error:', error)
     result.success = false
-    result.errors.push(error.message)
+    result.errors.push(error instanceof Error ? error.message : String(error))
     return result
   }
 }
@@ -205,13 +205,13 @@ async function syncSalesforceContacts(
 
         synced++
       } catch (error: unknown) {
-        errors.push(`Contact ${contact.Name}: ${error.message}`)
+        errors.push(`Contact ${contact.Name}: ${error instanceof Error ? error.message : String(error)}`)
       }
     }
 
     console.log(`Synced ${synced} contacts from Salesforce`)
   } catch (error: unknown) {
-    errors.push(`Contacts sync failed: ${error.message}`)
+    errors.push(`Contacts sync failed: ${error instanceof Error ? error.message : String(error)}`)
   }
 
   return { synced, errors }
@@ -310,13 +310,13 @@ async function syncSalesforceOpportunities(
 
         synced++
       } catch (error: unknown) {
-        errors.push(`Opportunity ${opp.Name}: ${error.message}`)
+        errors.push(`Opportunity ${opp.Name}: ${error instanceof Error ? error.message : String(error)}`)
       }
     }
 
     console.log(`Synced ${synced} opportunities from Salesforce`)
   } catch (error: unknown) {
-    errors.push(`Opportunities sync failed: ${error.message}`)
+    errors.push(`Opportunities sync failed: ${error instanceof Error ? error.message : String(error)}`)
   }
 
   return { synced, errors }
@@ -415,13 +415,13 @@ async function syncSalesforceTasks(
           synced++
         }
       } catch (error: unknown) {
-        errors.push(`Task ${task.Subject}: ${error.message}`)
+        errors.push(`Task ${task.Subject}: ${error instanceof Error ? error.message : String(error)}`)
       }
     }
 
     console.log(`Synced ${synced} tasks from Salesforce`)
   } catch (error: unknown) {
-    errors.push(`Tasks sync failed: ${error.message}`)
+    errors.push(`Tasks sync failed: ${error instanceof Error ? error.message : String(error)}`)
   }
 
   return { synced, errors }

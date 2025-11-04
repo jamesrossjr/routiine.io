@@ -43,8 +43,8 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
  * Generate access token (short-lived)
  */
 export function generateAccessToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN
+  return jwt.sign(payload as object, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN as string
   })
 }
 
@@ -53,8 +53,8 @@ export function generateAccessToken(payload: JWTPayload): string {
  */
 export function generateRefreshToken(payload: JWTPayload, rememberMe: boolean = false): string {
   const expiresIn = rememberMe ? '30d' : JWT_REFRESH_EXPIRES_IN
-  return jwt.sign(payload, JWT_REFRESH_SECRET, {
-    expiresIn
+  return jwt.sign(payload as object, JWT_REFRESH_SECRET, {
+    expiresIn: expiresIn as string
   })
 }
 
