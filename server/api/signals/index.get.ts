@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
         hasMore: result.hasMore
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get signals error:', error)
 
     if (error.statusCode) {

@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
       // In development, include the link for testing
       ...(process.env.NODE_ENV === 'development' && { resetLink })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Forgot password error:', error)
 
     if (error.statusCode) {

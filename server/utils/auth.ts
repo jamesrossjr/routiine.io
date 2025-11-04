@@ -64,7 +64,7 @@ export function generateRefreshToken(payload: JWTPayload, rememberMe: boolean = 
 export function verifyAccessToken(token: string): JWTPayload | null {
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload
-  } catch (error) {
+  } catch {
     return null
   }
 }
@@ -75,7 +75,7 @@ export function verifyAccessToken(token: string): JWTPayload | null {
 export function verifyRefreshToken(token: string): JWTPayload | null {
   try {
     return jwt.verify(token, JWT_REFRESH_SECRET) as JWTPayload
-  } catch (error) {
+  } catch {
     return null
   }
 }

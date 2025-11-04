@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
           }
         : null
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get user error:', error)
 
     if (error.statusCode) {

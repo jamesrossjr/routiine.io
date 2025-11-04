@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       stats
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Dashboard stats error:', error)
 
     if (error.statusCode) {

@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
       message: 'Signal created successfully',
       signal
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Create signal error:', error)
 
     if (error.statusCode) {

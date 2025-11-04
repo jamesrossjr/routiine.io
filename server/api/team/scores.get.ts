@@ -9,7 +9,7 @@ import { requireRole } from '~~/server/utils/auth'
 export default defineEventHandler(async (event) => {
   try {
     // Require manager or admin role
-    const user = requireRole(event, ['manager', 'admin'])
+    const _user = requireRole(event, ['manager', 'admin'])
 
     // In a real app, you'd fetch team members based on manager assignment
     // For now, fetch all users' latest momentum scores (simplified)
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
           : null
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Team scores error:', error)
 
     if (error.statusCode) {

@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: 'Password has been reset successfully. Please log in with your new password.'
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Reset password error:', error)
 
     if (error.statusCode) {

@@ -27,7 +27,7 @@ setInterval(() => {
  * Create a rate limiter middleware
  */
 export function createRateLimiter(config: RateLimitConfig) {
-  const { windowMs, maxRequests, skipSuccessfulRequests = false } = config
+  const { windowMs, maxRequests, skipSuccessfulRequests: _skipSuccessfulRequests = false } = config
 
   return defineEventHandler(async (event) => {
     // Get client identifier (IP address)

@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
       const parts = decoded.split(':')
       userId = parts[0]
       emailId = parts[1]
-    } catch (error) {
+    } catch {
       // Invalid tracking ID, but still return pixel
       setResponseHeader(event, 'Content-Type', 'image/gif')
       setResponseHeader(event, 'Cache-Control', 'no-store, no-cache, must-revalidate, private')
@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
 
     // Check if we already tracked this email recently (within 1 hour)
     const recentOpen = existingSignals.find((signal) => {
-      const metadata = signal.metadata as any
+      const metadata = signal.metadata as Record<string, unknown> | null
       return (
         metadata?.emailId === emailId
         && new Date().getTime() - new Date(signal.timestamp).getTime() < 3600000
@@ -70,7 +70,7 @@ export default defineEventHandler(async (event) => {
     if (recentOpen) {
       // This is a duplicate open (e.g., email client pre-fetching)
       // Don't create another signal, but update open count
-      const metadata = recentOpen.metadata as any
+      const metadata = recentOpen.metadata as Record<string, unknown> | null
       const openCount = (metadata?.openCount || 1) + 1
 
       await db

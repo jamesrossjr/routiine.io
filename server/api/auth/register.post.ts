@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
         subscriptionTier: newUser.subscriptionTier
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Log error for debugging
     console.error('Registration error:', error)
 

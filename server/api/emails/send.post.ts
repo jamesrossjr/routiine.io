@@ -88,7 +88,7 @@ export default defineEventHandler(async (event) => {
         testInstructions: 'Open the tracking pixel URL in a browser to simulate email open'
       })
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Send email error:', error)
 
     if (error.statusCode) {

@@ -1,4 +1,4 @@
-import { db, schema } from '~~/server/database'
+import { db } from '~~/server/database'
 import { requireRole } from '~~/server/utils/auth'
 
 /**
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
       users,
       total: users.length
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Admin users list error:', error)
 
     if (error.statusCode) {

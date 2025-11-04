@@ -183,7 +183,7 @@ export default defineEventHandler(async (event) => {
 
     // Redirect to dashboard
     return sendRedirect(event, '/dashboard', 302)
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Google OAuth callback error:', error)
     return sendRedirect(event, '/login?error=oauth_error', 302)
   }

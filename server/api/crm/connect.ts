@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
       orgName: connection.organization?.name,
       message: `Successfully connected to ${platform}`
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('CRM connection error:', error)
 
     return createError({
@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
  */
 function validateCredentials(
   platform: string,
-  credentials: Record<string, any>
+  credentials: Record<string, unknown>
 ): boolean {
   switch (platform.toLowerCase()) {
     case 'salesforce':
@@ -92,8 +92,8 @@ function validateCredentials(
  */
 async function connectToCrm(
   platform: string,
-  credentials: Record<string, any>,
-  settings: Record<string, any> = {}
+  credentials: Record<string, unknown>,
+  _settings: Record<string, unknown> = {}
 ): Promise<{
     success: boolean
     token?: string
@@ -157,7 +157,7 @@ async function connectToCrm(
           message: `Unsupported CRM platform: ${platform}`
         }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`Error connecting to ${platform}:`, error)
     return {
       success: false,
@@ -175,7 +175,7 @@ async function saveConnection(connectionDetails: {
   userId?: string
   platform: string
   connectionToken: string
-  settings: Record<string, any>
+  settings: Record<string, unknown>
   createdAt: Date
 }): Promise<string> {
   // In a real implementation, store this in a database

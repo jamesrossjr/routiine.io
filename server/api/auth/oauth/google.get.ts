@@ -3,7 +3,7 @@
  * Redirects user to Google consent screen
  */
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig()
+  const _config = useRuntimeConfig()
 
   const clientId = process.env.GOOGLE_CLIENT_ID
   const redirectUri = `${process.env.APP_URL}/api/auth/oauth/google/callback`

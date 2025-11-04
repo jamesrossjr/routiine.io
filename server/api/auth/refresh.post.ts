@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: 'Token refreshed successfully'
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Token refresh error:', error)
 
     if (error.statusCode) {

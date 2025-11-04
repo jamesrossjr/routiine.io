@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       signal
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get signal error:', error)
 
     if (error.statusCode) {

@@ -100,7 +100,7 @@ export default defineEventHandler(async (event) => {
 
     if (!email && emailResponse.ok) {
       const emails = await emailResponse.json()
-      const primaryEmail = emails.find((e: any) => e.primary && e.verified)
+      const primaryEmail = (emails as Array<{ email: string, primary: boolean, verified: boolean }>).find(e => e.primary && e.verified)
       email = primaryEmail?.email
     }
 
@@ -202,7 +202,7 @@ export default defineEventHandler(async (event) => {
 
     // Redirect to dashboard
     return sendRedirect(event, '/dashboard', 302)
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('GitHub OAuth callback error:', error)
     return sendRedirect(event, '/login?error=oauth_error', 302)
   }

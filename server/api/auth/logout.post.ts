@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: 'Logged out successfully'
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Logout error:', error)
 
     throw createError({

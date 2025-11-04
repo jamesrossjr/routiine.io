@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
         subscriptionTier: user.subscriptionTier
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Log error for debugging
     console.error('Login error:', error)
 

@@ -36,7 +36,7 @@ export async function getUserSignals(
     conditions.push(eq(schema.signals.type, type))
   }
   if (category) {
-    conditions.push(eq(schema.signals.category, category as any))
+    conditions.push(eq(schema.signals.category, category as never))
   }
   if (priority) {
     conditions.push(eq(schema.signals.priority, priority))
@@ -114,7 +114,7 @@ export async function getUserActivities(
     conditions.push(eq(schema.activities.clientId, clientId))
   }
   if (activityType) {
-    conditions.push(eq(schema.activities.activityType, activityType as any))
+    conditions.push(eq(schema.activities.activityType, activityType as never))
   }
   if (startDate) {
     conditions.push(gte(schema.activities.timestamp, startDate))
