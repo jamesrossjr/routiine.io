@@ -1,6 +1,6 @@
 import { and, eq, desc, gte, lte, sql, inArray } from 'drizzle-orm'
-import { db, schema } from '~~/server/database'
 import { getLatestMomentumScore } from './momentum'
+import { db, schema } from '~~/server/database'
 
 /**
  * Common query patterns optimized for performance
