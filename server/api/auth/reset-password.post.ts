@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         message: 'Validation failed',
-        data: validationResult.error.errors,
+        data: validationResult.error.errors
       })
     }
 
@@ -24,17 +24,17 @@ export default defineEventHandler(async (event) => {
       where: and(
         eq(schema.passwordResetTokens.token, token),
         isNull(schema.passwordResetTokens.usedAt),
-        gt(schema.passwordResetTokens.expiresAt, new Date()),
+        gt(schema.passwordResetTokens.expiresAt, new Date())
       ),
       with: {
-        user: true,
-      },
+        user: true
+      }
     })
 
     if (!resetTokenRecord) {
       throw createError({
         statusCode: 400,
-        message: 'Invalid or expired reset token',
+        message: 'Invalid or expired reset token'
       })
     }
 
@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      message: 'Password has been reset successfully. Please log in with your new password.',
+      message: 'Password has been reset successfully. Please log in with your new password.'
     }
   } catch (error: any) {
     console.error('Reset password error:', error)
@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while resetting your password',
+      message: 'An error occurred while resetting your password'
     })
   }
 })

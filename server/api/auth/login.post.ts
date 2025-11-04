@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         message: 'Validation failed',
-        data: validationResult.error.errors,
+        data: validationResult.error.errors
       })
     }
 
@@ -21,13 +21,13 @@ export default defineEventHandler(async (event) => {
 
     // Find user by email
     const user = await db.query.users.findFirst({
-      where: eq(schema.users.email, email),
+      where: eq(schema.users.email, email)
     })
 
     if (!user || !user.password) {
       throw createError({
         statusCode: 401,
-        message: 'Invalid email or password',
+        message: 'Invalid email or password'
       })
     }
 
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     if (!isPasswordValid) {
       throw createError({
         statusCode: 401,
-        message: 'Invalid email or password',
+        message: 'Invalid email or password'
       })
     }
 
@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
     const tokenPayload = {
       userId: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role
     }
 
     const accessToken = generateAccessToken(tokenPayload)
@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
     await db.insert(schema.sessions).values({
       userId: user.id,
       refreshToken,
-      expiresAt: refreshExpiresAt,
+      expiresAt: refreshExpiresAt
     })
 
     // Set authentication cookies
@@ -80,8 +80,8 @@ export default defineEventHandler(async (event) => {
         email: user.email,
         role: user.role,
         avatar: user.avatar,
-        subscriptionTier: user.subscriptionTier,
-      },
+        subscriptionTier: user.subscriptionTier
+      }
     }
   } catch (error: any) {
     // Log error for debugging
@@ -94,7 +94,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred during login',
+      message: 'An error occurred during login'
     })
   }
 })

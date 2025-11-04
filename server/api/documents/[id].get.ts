@@ -1,6 +1,6 @@
+import { eq, and } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
-import { eq, and } from 'drizzle-orm'
 
 /**
  * Get specific document by ID
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     if (!documentId) {
       throw createError({
         statusCode: 400,
-        message: 'Document ID is required',
+        message: 'Document ID is required'
       })
     }
 
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     if (!document) {
       throw createError({
         statusCode: 404,
-        message: 'Document not found',
+        message: 'Document not found'
       })
     }
 
@@ -45,8 +45,8 @@ export default defineEventHandler(async (event) => {
       success: true,
       document: {
         ...document,
-        trackableUrl: `${process.env.APP_URL}/api/documents/view/${document.trackingId}`,
-      },
+        trackableUrl: `${process.env.APP_URL}/api/documents/view/${document.trackingId}`
+      }
     }
   } catch (error: any) {
     console.error('Get document error:', error)
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching document',
+      message: 'An error occurred while fetching document'
     })
   }
 })

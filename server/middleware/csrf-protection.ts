@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 60 * 60 * 24, // 24 hours
-        path: '/',
+        path: '/'
       })
     }
 
@@ -65,10 +65,10 @@ export default defineEventHandler(async (event) => {
   const path = event.path || ''
   const skipPaths = [
     '/api/auth/oauth',
-    '/api/webhooks',
+    '/api/webhooks'
   ]
 
-  if (skipPaths.some((p) => path.includes(p))) {
+  if (skipPaths.some(p => path.includes(p))) {
     return
   }
 
@@ -79,14 +79,14 @@ export default defineEventHandler(async (event) => {
   if (!tokenFromCookie || !tokenFromHeader) {
     throw createError({
       statusCode: 403,
-      message: 'CSRF token missing',
+      message: 'CSRF token missing'
     })
   }
 
   if (!verifyCSRFToken(tokenFromCookie, tokenFromHeader)) {
     throw createError({
       statusCode: 403,
-      message: 'Invalid CSRF token',
+      message: 'Invalid CSRF token'
     })
   }
 })

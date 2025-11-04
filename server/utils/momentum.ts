@@ -1,5 +1,5 @@
-import { db, schema } from '~~/server/database'
 import { eq, and, gte, desc } from 'drizzle-orm'
+import { db, schema } from '~~/server/database'
 
 /**
  * Momentum Score Calculation Algorithm
@@ -19,10 +19,25 @@ interface MomentumScoreResult {
   signalCount: number
 }
 
-interface SignalImpact {
-  timestamp: Date
+interface Signal {
+  id: string
   impact: number
+  timestamp: Date
   category: string
+  metadata?: Record<string, unknown>
+}
+
+interface Activity {
+  id: string
+  timestamp: Date
+  activityType: string
+}
+
+interface Opportunity {
+  id: string
+  stage: string
+  closedAt?: Date | null
+  probability?: number | null
 }
 
 /**
@@ -89,7 +104,7 @@ export async function calculateMomentumScore(userId: string): Promise<MomentumSc
     consistencyScore,
     activityTrend,
     conversionTrend,
-    signalCount: currentSignals.length,
+    signalCount: currentSignals.length
   }
 }
 
@@ -98,8 +113,8 @@ export async function calculateMomentumScore(userId: string): Promise<MomentumSc
  * Score: 0-35 points
  */
 function calculateActivityScore(
-  signals: any[],
-  activities: any[],
+  signals: Signal[],
+  activities: Activity[],
   sevenDaysAgo: Date
 ): number {
   // Calculate signal impact (max 25 points)
@@ -107,8 +122,8 @@ function calculateActivityScore(
   const signalScore = Math.min(25, totalSignalImpact)
 
   // Calculate recent activity bonus (max 10 points)
-  const recentSignals = signals.filter((s) => new Date(s.timestamp) >= sevenDaysAgo)
-  const recentActivities = activities.filter((a) => new Date(a.timestamp) >= sevenDaysAgo)
+  const recentSignals = signals.filter(s => new Date(s.timestamp) >= sevenDaysAgo)
+  const recentActivities = activities.filter(a => new Date(a.timestamp) >= sevenDaysAgo)
   const recentActivityCount = recentSignals.length + recentActivities.length
   const activityBonus = Math.min(10, recentActivityCount)
 
@@ -119,28 +134,28 @@ function calculateActivityScore(
  * Calculate conversion score based on opportunities
  * Score: 0-35 points
  */
-function calculateConversionScore(opportunities: any[]): number {
+function calculateConversionScore(opportunities: Opportunity[]): number {
   if (opportunities.length === 0) {
     return 0
   }
 
   // Calculate win rate (max 20 points)
   const closedOpportunities = opportunities.filter(
-    (opp) => opp.stage === 'closed_won' || opp.stage === 'closed_lost'
+    opp => opp.stage === 'closed_won' || opp.stage === 'closed_lost'
   )
-  const wonOpportunities = opportunities.filter((opp) => opp.stage === 'closed_won')
+  const wonOpportunities = opportunities.filter(opp => opp.stage === 'closed_won')
   const winRate = closedOpportunities.length > 0 ? wonOpportunities.length / closedOpportunities.length : 0
   const winRateScore = Math.round(winRate * 20)
 
   // Calculate pipeline health (max 15 points)
   const activeOpportunities = opportunities.filter(
-    (opp) => opp.stage !== 'closed_won' && opp.stage !== 'closed_lost'
+    opp => opp.stage !== 'closed_won' && opp.stage !== 'closed_lost'
   )
 
   // Points based on stage distribution
-  const discoveryCount = activeOpportunities.filter((opp) => opp.stage === 'discovery').length
-  const proposalCount = activeOpportunities.filter((opp) => opp.stage === 'proposal').length
-  const negotiationCount = activeOpportunities.filter((opp) => opp.stage === 'negotiation').length
+  const discoveryCount = activeOpportunities.filter(opp => opp.stage === 'discovery').length
+  const proposalCount = activeOpportunities.filter(opp => opp.stage === 'proposal').length
+  const negotiationCount = activeOpportunities.filter(opp => opp.stage === 'negotiation').length
 
   // Better score if opportunities are progressing through stages
   const pipelineHealthScore = Math.min(
@@ -155,7 +170,7 @@ function calculateConversionScore(opportunities: any[]): number {
  * Calculate consistency score based on regular engagement
  * Score: 0-30 points
  */
-function calculateConsistencyScore(signals: any[], sevenDaysAgo: Date): number {
+function calculateConsistencyScore(signals: Signal[], sevenDaysAgo: Date): number {
   if (signals.length === 0) {
     return 0
   }
@@ -179,7 +194,7 @@ function calculateConsistencyScore(signals: any[], sevenDaysAgo: Date): number {
   const avgSignalsScore = Math.min(15, Math.round(avgSignalsPerDay * 2))
 
   // Bonus for recent activity (last 7 days)
-  const recentSignals = signals.filter((s) => new Date(s.timestamp) >= sevenDaysAgo)
+  const recentSignals = signals.filter(s => new Date(s.timestamp) >= sevenDaysAgo)
   const recentBonus = recentSignals.length > 0 ? 5 : 0
 
   return Math.round(Math.min(30, activeDaysScore + avgSignalsScore + recentBonus))
@@ -188,7 +203,7 @@ function calculateConsistencyScore(signals: any[], sevenDaysAgo: Date): number {
 /**
  * Calculate activity trend (percentage change from previous period)
  */
-function calculateActivityTrend(currentSignals: any[], previousSignals: any[]): number {
+function calculateActivityTrend(currentSignals: Signal[], previousSignals: Signal[]): number {
   const currentImpact = currentSignals.reduce((sum, s) => sum + s.impact, 0)
   const previousImpact = previousSignals.reduce((sum, s) => sum + s.impact, 0)
 
@@ -204,29 +219,29 @@ function calculateActivityTrend(currentSignals: any[], previousSignals: any[]): 
  * Calculate conversion trend (win rate change)
  */
 function calculateConversionTrend(
-  opportunities: any[],
+  opportunities: Opportunity[],
   thirtyDaysAgo: Date,
   sixtyDaysAgo: Date
 ): number {
   // Current period win rate (last 30 days)
   const currentClosed = opportunities.filter(
-    (opp) =>
-      opp.closedAt &&
-      new Date(opp.closedAt) >= thirtyDaysAgo &&
-      (opp.stage === 'closed_won' || opp.stage === 'closed_lost')
+    opp =>
+      opp.closedAt
+      && new Date(opp.closedAt) >= thirtyDaysAgo
+      && (opp.stage === 'closed_won' || opp.stage === 'closed_lost')
   )
-  const currentWon = currentClosed.filter((opp) => opp.stage === 'closed_won')
+  const currentWon = currentClosed.filter(opp => opp.stage === 'closed_won')
   const currentWinRate = currentClosed.length > 0 ? currentWon.length / currentClosed.length : 0
 
   // Previous period win rate (30-60 days ago)
   const previousClosed = opportunities.filter(
-    (opp) =>
-      opp.closedAt &&
-      new Date(opp.closedAt) >= sixtyDaysAgo &&
-      new Date(opp.closedAt) < thirtyDaysAgo &&
-      (opp.stage === 'closed_won' || opp.stage === 'closed_lost')
+    opp =>
+      opp.closedAt
+      && new Date(opp.closedAt) >= sixtyDaysAgo
+      && new Date(opp.closedAt) < thirtyDaysAgo
+      && (opp.stage === 'closed_won' || opp.stage === 'closed_lost')
   )
-  const previousWon = previousClosed.filter((opp) => opp.stage === 'closed_won')
+  const previousWon = previousClosed.filter(opp => opp.stage === 'closed_won')
   const previousWinRate = previousClosed.length > 0 ? previousWon.length / previousClosed.length : 0
 
   if (previousWinRate === 0) {
@@ -249,7 +264,7 @@ export async function storeMomentumScore(userId: string, scoreData: MomentumScor
     consistencyScore: scoreData.consistencyScore,
     activityTrend: scoreData.activityTrend,
     conversionTrend: scoreData.conversionTrend,
-    signalCount: scoreData.signalCount,
+    signalCount: scoreData.signalCount
   })
 }
 
@@ -275,6 +290,6 @@ export async function getLatestMomentumScore(userId: string): Promise<MomentumSc
     consistencyScore: latestScore.consistencyScore || 0,
     activityTrend: latestScore.activityTrend || 0,
     conversionTrend: latestScore.conversionTrend || 0,
-    signalCount: latestScore.signalCount || 0,
+    signalCount: latestScore.signalCount || 0
   }
 }

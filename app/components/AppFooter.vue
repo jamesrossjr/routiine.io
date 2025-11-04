@@ -53,7 +53,7 @@ function onSubmit() {
 <template>
   <USeparator />
   <UFooter :ui="{ top: 'border-b border-[var(--ui-border)]' }">
- <!-- <template #top>
+    <!-- <template #top>
       <UContainer>
         <UFooterColumns :columns="columns">
           <template #right>
@@ -91,7 +91,7 @@ function onSubmit() {
       </p>
     </template>
 
-   <!-- <template #right>
+    <!-- <template #right>
       <UColorModeButton />
 
         <UButton
@@ -105,4 +105,3 @@ function onSubmit() {
     </template> -->
   </UFooter>
 </template>
-

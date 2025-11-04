@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     if (!clientId) {
       throw createError({
         statusCode: 500,
-        message: 'Salesforce OAuth not configured',
+        message: 'Salesforce OAuth not configured'
       })
     }
 
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const state = Buffer.from(
       JSON.stringify({
         userId: user.userId,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       })
     ).toString('base64')
 
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 600, // 10 minutes
+      maxAge: 600 // 10 minutes
     })
 
     // Build Salesforce OAuth URL
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       authUrl: authUrl.toString(),
-      message: 'Redirect user to authUrl to authorize',
+      message: 'Redirect user to authUrl to authorize'
     }
   } catch (error: any) {
     console.error('Salesforce connect error:', error)
@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while initiating Salesforce connection',
+      message: 'An error occurred while initiating Salesforce connection'
     })
   }
 })

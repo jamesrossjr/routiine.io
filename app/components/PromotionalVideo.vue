@@ -1,5 +1,8 @@
 <template>
-  <UContainer class="py-10" id="dashboard">
+  <UContainer
+    id="dashboard"
+    class="py-10"
+  >
     <UPage>
       <header class="bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800 px-6 pt-4 pb-2 flex items-center justify-between relative">
         <div class="absolute inset-x-0 top-0 h-[1px] bg-gray-200 dark:bg-slate-700" />

@@ -1,5 +1,5 @@
-import { db, schema } from '~~/server/database'
 import { eq, and, gte } from 'drizzle-orm'
+import { db, schema } from '~~/server/database'
 
 /**
  * Document view tracking endpoint
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     if (!trackingId) {
       throw createError({
         statusCode: 400,
-        message: 'Tracking ID is required',
+        message: 'Tracking ID is required'
       })
     }
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
     } catch {
       throw createError({
         statusCode: 400,
-        message: 'Invalid tracking ID',
+        message: 'Invalid tracking ID'
       })
     }
 
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
     if (!document) {
       throw createError({
         statusCode: 404,
-        message: 'Document not found',
+        message: 'Document not found'
       })
     }
 
@@ -77,8 +77,8 @@ export default defineEventHandler(async (event) => {
     const recentView = existingSignals.find((signal) => {
       const metadata = signal.metadata as any
       return (
-        metadata?.documentId === documentId &&
-        new Date().getTime() - new Date(signal.timestamp).getTime() < 3600000
+        metadata?.documentId === documentId
+        && new Date().getTime() - new Date(signal.timestamp).getTime() < 3600000
       )
     })
 
@@ -95,8 +95,8 @@ export default defineEventHandler(async (event) => {
             viewCount,
             lastViewedAt: new Date().toISOString(),
             userAgent,
-            ip,
-          },
+            ip
+          }
         })
         .where(eq(schema.signals.id, recentView.id))
 
@@ -126,8 +126,8 @@ export default defineEventHandler(async (event) => {
           viewCount: 1,
           userAgent,
           ip,
-          referrer,
-        },
+          referrer
+        }
       })
 
       console.log(
@@ -140,7 +140,7 @@ export default defineEventHandler(async (event) => {
       .update(schema.documents)
       .set({
         viewCount: document.viewCount + 1,
-        lastViewedAt: new Date(),
+        lastViewedAt: new Date()
       })
       .where(eq(schema.documents.id, documentId))
 
@@ -158,7 +158,7 @@ export default defineEventHandler(async (event) => {
     // Return generic error to not reveal tracking info
     throw createError({
       statusCode: 404,
-      message: 'Document not found',
+      message: 'Document not found'
     })
   }
 })

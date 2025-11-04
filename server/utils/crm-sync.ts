@@ -1,5 +1,5 @@
-import { db, schema } from '~~/server/database'
 import { eq, and } from 'drizzle-orm'
+import { db, schema } from '~~/server/database'
 
 /**
  * CRM Data Sync Service
@@ -14,6 +14,37 @@ interface SyncResult {
   errors: string[]
 }
 
+interface SalesforceContact {
+  Id: string
+  Name: string
+  Email: string
+  Phone?: string
+  Title?: string
+  AccountId?: string
+  Account?: {
+    Name?: string
+  }
+}
+
+interface SalesforceOpportunity {
+  Id: string
+  Name: string
+  Amount?: number
+  StageName: string
+  Probability?: number
+  CloseDate: string
+  ContactId?: string
+}
+
+interface SalesforceTask {
+  Id: string
+  Subject: string
+  Description?: string
+  Status: string
+  WhoId?: string
+  ActivityDate?: string
+}
+
 /**
  * Sync Salesforce data to Routiine.io
  */
@@ -26,7 +57,7 @@ export async function syncSalesforceData(
     clientsSynced: 0,
     opportunitiesSynced: 0,
     activitiesSynced: 0,
-    errors: [],
+    errors: []
   }
 
   try {
@@ -78,7 +109,7 @@ export async function syncSalesforceData(
     await db
       .update(schema.crmConnections)
       .set({
-        lastSyncAt: new Date(),
+        lastSyncAt: new Date()
       })
       .where(eq(schema.crmConnections.id, connectionId))
 
@@ -100,7 +131,7 @@ async function syncSalesforceContacts(
   userId: string,
   instanceUrl: string,
   accessToken: string
-): Promise<{ synced: number; errors: string[] }> {
+): Promise<{ synced: number, errors: string[] }> {
   const errors: string[] = []
   let synced = 0
 
@@ -111,9 +142,9 @@ async function syncSalesforceContacts(
 
     const response = await fetch(queryUrl, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
     })
 
     if (!response.ok) {
@@ -121,7 +152,7 @@ async function syncSalesforceContacts(
     }
 
     const data = await response.json()
-    const contacts = data.records || []
+    const contacts: SalesforceContact[] = data.records || []
 
     // Import contacts as clients
     for (const contact of contacts) {
@@ -148,7 +179,7 @@ async function syncSalesforceContacts(
               contactTitle: contact.Title || null,
               email: contact.Email,
               phone: contact.Phone || null,
-              company: contact.Account?.Name || null,
+              company: contact.Account?.Name || null
             })
             .where(eq(schema.clients.id, existing.id))
         } else {
@@ -162,7 +193,7 @@ async function syncSalesforceContacts(
             phone: contact.Phone || null,
             company: contact.Account?.Name || null,
             source: 'crm',
-            externalId: contact.Id,
+            externalId: contact.Id
           })
         }
 
@@ -187,7 +218,7 @@ async function syncSalesforceOpportunities(
   userId: string,
   instanceUrl: string,
   accessToken: string
-): Promise<{ synced: number; errors: string[] }> {
+): Promise<{ synced: number, errors: string[] }> {
   const errors: string[] = []
   let synced = 0
 
@@ -198,9 +229,9 @@ async function syncSalesforceOpportunities(
 
     const response = await fetch(queryUrl, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
     })
 
     if (!response.ok) {
@@ -208,7 +239,7 @@ async function syncSalesforceOpportunities(
     }
 
     const data = await response.json()
-    const opportunities = data.records || []
+    const opportunities: SalesforceOpportunity[] = data.records || []
 
     // Import opportunities
     for (const opp of opportunities) {
@@ -254,7 +285,7 @@ async function syncSalesforceOpportunities(
               value: opp.Amount ? opp.Amount.toString() : null,
               stage,
               probability: opp.Probability || 0,
-              closedAt: stage === 'closed_won' || stage === 'closed_lost' ? new Date(opp.CloseDate) : null,
+              closedAt: stage === 'closed_won' || stage === 'closed_lost' ? new Date(opp.CloseDate) : null
             })
             .where(eq(schema.opportunities.id, existing.id))
         } else {
@@ -267,7 +298,7 @@ async function syncSalesforceOpportunities(
             stage,
             probability: opp.Probability || 0,
             externalId: opp.Id,
-            closedAt: stage === 'closed_won' || stage === 'closed_lost' ? new Date(opp.CloseDate) : null,
+            closedAt: stage === 'closed_won' || stage === 'closed_lost' ? new Date(opp.CloseDate) : null
           })
         }
 
@@ -292,7 +323,7 @@ async function syncSalesforceTasks(
   userId: string,
   instanceUrl: string,
   accessToken: string
-): Promise<{ synced: number; errors: string[] }> {
+): Promise<{ synced: number, errors: string[] }> {
   const errors: string[] = []
   let synced = 0
 
@@ -303,9 +334,9 @@ async function syncSalesforceTasks(
 
     const response = await fetch(queryUrl, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
     })
 
     if (!response.ok) {
@@ -313,7 +344,7 @@ async function syncSalesforceTasks(
     }
 
     const data = await response.json()
-    const tasks = data.records || []
+    const tasks: SalesforceTask[] = data.records || []
 
     // Import tasks as activities
     for (const task of tasks) {
@@ -356,7 +387,7 @@ async function syncSalesforceTasks(
             description: task.Subject || 'Salesforce Task',
             outcome: task.Description || null,
             externalId: task.Id,
-            timestamp: task.ActivityDate ? new Date(task.ActivityDate) : new Date(),
+            timestamp: task.ActivityDate ? new Date(task.ActivityDate) : new Date()
           })
 
           // Create CRM activity signal
@@ -371,8 +402,8 @@ async function syncSalesforceTasks(
             metadata: {
               source: 'salesforce',
               taskId: task.Id,
-              status: task.Status,
-            },
+              status: task.Status
+            }
           })
 
           synced++

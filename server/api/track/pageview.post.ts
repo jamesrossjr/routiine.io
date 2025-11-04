@@ -13,7 +13,7 @@ const pageViewSchema = z.object({
   referrer: z.string().optional(),
   sessionId: z.string().optional(),
   userId: z.string().uuid().optional(), // Identified user
-  clientId: z.string().uuid().optional(), // Associated client
+  clientId: z.string().uuid().optional() // Associated client
 })
 
 export default defineEventHandler(async (event) => {
@@ -50,8 +50,8 @@ export default defineEventHandler(async (event) => {
       priority = 'high'
       impact = 4
     } else if (
-      pageViewData.url.includes('/features') ||
-      pageViewData.url.includes('/product')
+      pageViewData.url.includes('/features')
+      || pageViewData.url.includes('/product')
     ) {
       priority = 'medium'
       impact = 2
@@ -72,8 +72,8 @@ export default defineEventHandler(async (event) => {
         referrer: pageViewData.referrer,
         sessionId: pageViewData.sessionId,
         userAgent,
-        ip,
-      },
+        ip
+      }
     })
 
     console.log(`Page view tracked: ${pageViewData.url} (priority: ${priority})`)

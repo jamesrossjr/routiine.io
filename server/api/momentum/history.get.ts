@@ -1,6 +1,6 @@
+import { eq, desc } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
-import { eq, desc, gte } from 'drizzle-orm'
 
 /**
  * Get momentum score history
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
         activityTrend: schema.momentumScores.activityTrend,
         conversionTrend: schema.momentumScores.conversionTrend,
         signalCount: schema.momentumScores.signalCount,
-        calculatedAt: schema.momentumScores.calculatedAt,
+        calculatedAt: schema.momentumScores.calculatedAt
       })
       .from(schema.momentumScores)
       .where(
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
       .limit(limit)
 
     // Calculate summary statistics
-    const scores = history.map((h) => h.score)
+    const scores = history.map(h => h.score)
     const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0
     const maxScore = scores.length > 0 ? Math.max(...scores) : 0
     const minScore = scores.length > 0 ? Math.min(...scores) : 0
@@ -61,8 +61,8 @@ export default defineEventHandler(async (event) => {
         min: minScore,
         current: latestScore,
         trend: trendDirection,
-        dataPoints: history.length,
-      },
+        dataPoints: history.length
+      }
     }
   } catch (error: any) {
     console.error('Get momentum history error:', error)
@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching momentum history',
+      message: 'An error occurred while fetching momentum history'
     })
   }
 })

@@ -14,7 +14,7 @@ export const signalCategoryEnum = pgEnum('signal_category', [
   'bounce',
   'session_timeout',
   'document_view',
-  'crm_activity',
+  'crm_activity'
 ])
 export const signalPriorityEnum = pgEnum('signal_priority', ['high', 'medium', 'low'])
 export const crmPlatformEnum = pgEnum('crm_platform', ['salesforce', 'hubspot', 'zoho', 'pipedrive'])
@@ -25,7 +25,7 @@ export const opportunityStageEnum = pgEnum('opportunity_stage', [
   'proposal',
   'negotiation',
   'closed_won',
-  'closed_lost',
+  'closed_lost'
 ])
 export const taskStatusEnum = pgEnum('task_status', ['pending', 'in_progress', 'completed'])
 export const activityTypeEnum = pgEnum('activity_type', ['call', 'email', 'meeting', 'note', 'proposal_sent'])
@@ -44,7 +44,7 @@ export const users = pgTable('users', {
   avatar: text('avatar'),
   subscriptionTier: subscriptionTierEnum('subscription_tier').notNull().default('basic'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  lastLogin: timestamp('last_login'),
+  lastLogin: timestamp('last_login')
 })
 
 // Sessions Table (for JWT refresh tokens)
@@ -55,7 +55,7 @@ export const sessions = pgTable('sessions', {
     .references(() => users.id, { onDelete: 'cascade' }),
   refreshToken: text('refresh_token').notNull(),
   expiresAt: timestamp('expires_at').notNull(),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow()
 })
 
 // Password Reset Tokens Table
@@ -67,7 +67,7 @@ export const passwordResetTokens = pgTable('password_reset_tokens', {
   token: varchar('token', { length: 255 }).notNull().unique(),
   expiresAt: timestamp('expires_at').notNull(),
   usedAt: timestamp('used_at'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow()
 })
 
 // OAuth Connections Table
@@ -81,7 +81,7 @@ export const oauthConnections = pgTable('oauth_connections', {
   accessToken: text('access_token'),
   refreshToken: text('refresh_token'),
   tokenExpiry: timestamp('token_expiry'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow()
 })
 
 // Clients/Prospects Table
@@ -98,7 +98,7 @@ export const clients = pgTable('clients', {
   company: varchar('company', { length: 255 }),
   source: clientSourceEnum('source').notNull().default('manual'),
   externalId: varchar('external_id', { length: 255 }), // CRM ID
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow()
 })
 
 // Opportunities Table
@@ -118,7 +118,7 @@ export const opportunities = pgTable('opportunities', {
   nextFollowUp: timestamp('next_follow_up'),
   externalId: varchar('external_id', { length: 255 }), // CRM ID
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  closedAt: timestamp('closed_at'),
+  closedAt: timestamp('closed_at')
 })
 
 // Signals Table
@@ -135,7 +135,7 @@ export const signals = pgTable('signals', {
   impact: integer('impact').notNull(), // -5 to +6
   priority: signalPriorityEnum('priority').notNull().default('medium'),
   metadata: jsonb('metadata'), // Additional context
-  timestamp: timestamp('timestamp').notNull().defaultNow(),
+  timestamp: timestamp('timestamp').notNull().defaultNow()
 })
 
 // Momentum Scores Table
@@ -151,7 +151,7 @@ export const momentumScores = pgTable('momentum_scores', {
   activityTrend: integer('activity_trend').default(0), // Percentage change
   conversionTrend: integer('conversion_trend').default(0), // Percentage change
   signalCount: integer('signal_count').default(0),
-  calculatedAt: timestamp('calculated_at').notNull().defaultNow(),
+  calculatedAt: timestamp('calculated_at').notNull().defaultNow()
 })
 
 // Signal Assessments Table (Discovery Tool)
@@ -169,7 +169,7 @@ export const signalAssessments = pgTable('signal_assessments', {
   signals: jsonb('signals').notNull(), // 7-point evaluation data
   isDraft: boolean('is_draft').notNull().default(true),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow()
 })
 
 // Activities Table
@@ -183,7 +183,7 @@ export const activities = pgTable('activities', {
   description: text('description').notNull(),
   outcome: text('outcome'),
   externalId: varchar('external_id', { length: 255 }), // CRM Activity ID
-  timestamp: timestamp('timestamp').notNull().defaultNow(),
+  timestamp: timestamp('timestamp').notNull().defaultNow()
 })
 
 // CRM Connections Table
@@ -201,7 +201,7 @@ export const crmConnections = pgTable('crm_connections', {
   connectedOrgName: varchar('connected_org_name', { length: 255 }),
   lastSyncAt: timestamp('last_sync_at'),
   settings: jsonb('settings'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow()
 })
 
 // Tasks Table
@@ -217,7 +217,7 @@ export const tasks = pgTable('tasks', {
   status: taskStatusEnum('status').notNull().default('pending'),
   relatedClientId: uuid('related_client_id').references(() => clients.id, { onDelete: 'set null' }),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  completedAt: timestamp('completed_at'),
+  completedAt: timestamp('completed_at')
 })
 
 // Subscriptions Table
@@ -236,7 +236,7 @@ export const subscriptions = pgTable('subscriptions', {
   endDate: timestamp('end_date'),
   trialEndsAt: timestamp('trial_ends_at'),
   autoRenew: boolean('auto_renew').notNull().default(true),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow()
 })
 
 // Pricing Plans Table
@@ -250,7 +250,7 @@ export const pricingPlans = pgTable('pricing_plans', {
   limits: jsonb('limits'), // {signals: 500, crm_connections: 1, assessments: 10}
   highlighted: boolean('highlighted').notNull().default(false),
   displayOrder: integer('display_order').notNull().default(0),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow()
 })
 
 // Blog Posts Table
@@ -264,7 +264,7 @@ export const blogPosts = pgTable('blog_posts', {
   publishedAt: timestamp('published_at'),
   tags: jsonb('tags'), // Array of tag strings
   createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow()
 })
 
 // Daily Metrics Table (for historical analytics)
@@ -278,7 +278,7 @@ export const dailyMetrics = pgTable('daily_metrics', {
   signalCounts: jsonb('signal_counts'), // {email_open: 5, page_view: 10, ...}
   activityCounts: jsonb('activity_counts'), // {call: 3, email: 5, ...}
   conversionRate: decimal('conversion_rate', { precision: 5, scale: 2 }),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow()
 })
 
 // Documents Table (for tracked document sharing)
@@ -299,7 +299,7 @@ export const documents = pgTable('documents', {
   viewCount: integer('view_count').notNull().default(0),
   lastViewedAt: timestamp('last_viewed_at'),
   metadata: jsonb('metadata'), // Additional document info
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow()
 })
 
 // Relations
@@ -317,61 +317,61 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   subscription: one(subscriptions),
   opportunities: many(opportunities),
   dailyMetrics: many(dailyMetrics),
-  documents: many(documents),
+  documents: many(documents)
 }))
 
 export const clientsRelations = relations(clients, ({ many, one }) => ({
   user: one(users, {
     fields: [clients.userId],
-    references: [users.id],
+    references: [users.id]
   }),
   signals: many(signals),
   opportunities: many(opportunities),
   activities: many(activities),
   tasks: many(tasks),
   signalAssessments: many(signalAssessments),
-  documents: many(documents),
+  documents: many(documents)
 }))
 
 export const opportunitiesRelations = relations(opportunities, ({ one, many }) => ({
   client: one(clients, {
     fields: [opportunities.clientId],
-    references: [clients.id],
+    references: [clients.id]
   }),
   user: one(users, {
     fields: [opportunities.userId],
-    references: [users.id],
+    references: [users.id]
   }),
   signals: many(signals),
-  documents: many(documents),
+  documents: many(documents)
 }))
 
 export const signalsRelations = relations(signals, ({ one }) => ({
   user: one(users, {
     fields: [signals.userId],
-    references: [users.id],
+    references: [users.id]
   }),
   client: one(clients, {
     fields: [signals.clientId],
-    references: [clients.id],
+    references: [clients.id]
   }),
   opportunity: one(opportunities, {
     fields: [signals.opportunityId],
-    references: [opportunities.id],
-  }),
+    references: [opportunities.id]
+  })
 }))
 
 export const documentsRelations = relations(documents, ({ one }) => ({
   user: one(users, {
     fields: [documents.userId],
-    references: [users.id],
+    references: [users.id]
   }),
   client: one(clients, {
     fields: [documents.clientId],
-    references: [clients.id],
+    references: [clients.id]
   }),
   opportunity: one(opportunities, {
     fields: [documents.opportunityId],
-    references: [opportunities.id],
-  }),
+    references: [opportunities.id]
+  })
 }))

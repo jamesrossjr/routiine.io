@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   if (!clientId) {
     throw createError({
       statusCode: 500,
-      message: 'Google OAuth not configured',
+      message: 'Google OAuth not configured'
     })
   }
 
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 600, // 10 minutes
-    path: '/',
+    path: '/'
   })
 
   // Build Google OAuth URL
@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
     scope: 'openid email profile',
     access_type: 'offline',
     state,
-    prompt: 'select_account',
+    prompt: 'select_account'
   })
 
   const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`

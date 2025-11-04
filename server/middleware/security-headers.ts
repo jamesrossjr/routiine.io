@@ -9,19 +9,19 @@ export default defineEventHandler((event) => {
     event,
     'Content-Security-Policy',
     [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://github.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https: http:",
-      "connect-src 'self' https://accounts.google.com https://api.github.com",
-      "frame-src 'self' https://accounts.google.com",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
-    ].join('; '),
+      'default-src \'self\'',
+      'script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https://accounts.google.com https://github.com',
+      'style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com',
+      'font-src \'self\' https://fonts.gstatic.com',
+      'img-src \'self\' data: https: http:',
+      'connect-src \'self\' https://accounts.google.com https://api.github.com',
+      'frame-src \'self\' https://accounts.google.com',
+      'object-src \'none\'',
+      'base-uri \'self\'',
+      'form-action \'self\'',
+      'frame-ancestors \'none\'',
+      'upgrade-insecure-requests'
+    ].join('; ')
   )
 
   // Prevent clickjacking attacks
@@ -48,8 +48,8 @@ export default defineEventHandler((event) => {
       'magnetometer=()',
       'microphone=()',
       'payment=()',
-      'usb=()',
-    ].join(', '),
+      'usb=()'
+    ].join(', ')
   )
 
   // HTTP Strict Transport Security (HSTS)
@@ -58,7 +58,7 @@ export default defineEventHandler((event) => {
     setResponseHeader(
       event,
       'Strict-Transport-Security',
-      'max-age=31536000; includeSubDomains; preload',
+      'max-age=31536000; includeSubDomains; preload'
     )
   }
 

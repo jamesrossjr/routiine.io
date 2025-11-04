@@ -1,6 +1,6 @@
+import { eq, and } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
-import { eq, and } from 'drizzle-orm'
 
 /**
  * Get Salesforce sync status
@@ -27,36 +27,13 @@ export default defineEventHandler(async (event) => {
     if (!connection) {
       throw createError({
         statusCode: 404,
-        message: 'Salesforce connection not found',
+        message: 'Salesforce connection not found'
       })
     }
 
-    // Get sync statistics
-    const [clientCount] = await db
-      .select({
-        count: schema.clients.id,
-      })
-      .from(schema.clients)
-      .where(
-        and(
-          eq(schema.clients.userId, user.userId),
-          eq(schema.clients.source, 'crm')
-        )
-      )
-
-    const [opportunityCount] = await db
-      .select({
-        count: schema.opportunities.id,
-      })
-      .from(schema.opportunities)
-      .where(eq(schema.opportunities.userId, user.userId))
-
-    const [activityCount] = await db
-      .select({
-        count: schema.activities.id,
-      })
-      .from(schema.activities)
-      .where(eq(schema.activities.userId, user.userId))
+    // Note: Sync statistics would require proper count queries
+    // For now, we return placeholder values
+    // TODO: Implement proper count aggregation queries
 
     // Calculate time since last sync
     let timeSinceSync = null
@@ -91,9 +68,9 @@ export default defineEventHandler(async (event) => {
         syncedData: {
           clients: 0, // This would need a proper count query
           opportunities: 0,
-          activities: 0,
-        },
-      },
+          activities: 0
+        }
+      }
     }
   } catch (error: any) {
     console.error('Get sync status error:', error)
@@ -104,7 +81,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching sync status',
+      message: 'An error occurred while fetching sync status'
     })
   }
 })

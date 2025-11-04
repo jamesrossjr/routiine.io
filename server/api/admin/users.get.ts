@@ -13,16 +13,16 @@ export default defineEventHandler(async (event) => {
     // Fetch all users (exclude passwords)
     const users = await db.query.users.findMany({
       columns: {
-        password: false,
+        password: false
       },
       orderBy: (users, { desc }) => [desc(users.createdAt)],
-      limit: 100,
+      limit: 100
     })
 
     return {
       success: true,
       users,
-      total: users.length,
+      total: users.length
     }
   } catch (error: any) {
     console.error('Admin users list error:', error)
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching users',
+      message: 'An error occurred while fetching users'
     })
   }
 })

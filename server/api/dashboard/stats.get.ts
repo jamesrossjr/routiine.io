@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      stats,
+      stats
     }
   } catch (error: any) {
     console.error('Dashboard stats error:', error)
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching dashboard stats',
+      message: 'An error occurred while fetching dashboard stats'
     })
   }
 })

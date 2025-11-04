@@ -12,7 +12,7 @@ const sendEmailSchema = z.object({
   subject: z.string().min(1).max(255),
   body: z.string().min(1),
   bodyHtml: z.string().optional(),
-  clientId: z.string().uuid().optional(),
+  clientId: z.string().uuid().optional()
 })
 
 export default defineEventHandler(async (event) => {
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         message: 'Validation failed',
-        data: validationResult.error.errors,
+        data: validationResult.error.errors
       })
     }
 
@@ -85,8 +85,8 @@ export default defineEventHandler(async (event) => {
       // In development, return the tracking URL for testing
       ...(process.env.NODE_ENV === 'development' && {
         trackingPixelUrl,
-        testInstructions: 'Open the tracking pixel URL in a browser to simulate email open',
-      }),
+        testInstructions: 'Open the tracking pixel URL in a browser to simulate email open'
+      })
     }
   } catch (error: any) {
     console.error('Send email error:', error)
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while sending email',
+      message: 'An error occurred while sending email'
     })
   }
 })

@@ -57,7 +57,7 @@ const visibleSignals = computed(() => {
     .slice(0, MAX_SIGNALS)
 })
 
-const placeholderCount = computed(() => 
+const placeholderCount = computed(() =>
   Math.max(0, MAX_SIGNALS - visibleSignals.value.length)
 )
 
@@ -68,12 +68,12 @@ const scoreColor = computed(() => {
   return '#ef4444' // red-500
 })
 
-const chartBackgroundColor = computed(() => 
+const chartBackgroundColor = computed(() =>
   colorMode.value === 'dark' ? '#1e293b' : '#f1f5f9'
 )
 
-const containerClass = computed(() => 
-  colorMode.value === 'dark' 
+const containerClass = computed(() =>
+  colorMode.value === 'dark'
     ? 'bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white'
     : 'bg-gradient-to-b from-slate-100 via-white to-slate-100 text-slate-900'
 )
@@ -155,7 +155,7 @@ function animateScore() {
   // Adjust speed based on difference
   const difference = Math.abs(targetScore.value - score.value)
   const speed = Math.max(10, ANIMATION_SPEED / (difference > 10 ? 2 : 1))
-  
+
   let lastUpdate = 0
 
   const animate = () => {
@@ -211,7 +211,7 @@ function getRandomSignal(positive: boolean): Signal {
       ]
 
   const random = Math.floor(Math.random() * options.length)
-  const selected = options[random] || (positive 
+  const selected = options[random] || (positive
     ? { name: 'Default positive', impact: 3 }
     : { name: 'Default negative', impact: -3 })
 
@@ -291,15 +291,15 @@ watch(() => colorMode.value, () => {
 // Lifecycle hooks
 onMounted(async () => {
   await nextTick()
-  
+
   // Initialize with calculated score
   const initialScore = calculateScore()
   targetScore.value = initialScore
   score.value = initialScore
-  
+
   // Create chart
   createChart()
-  
+
   // Start simulation
   simulationInterval = window.setInterval(simulateSignals, SIMULATION_INTERVAL)
 })
@@ -327,26 +327,52 @@ onBeforeUnmount(cleanup)
           <h2 class="text-xl font-bold tracking-tight">
             Momentum Scorecard
           </h2>
-          
+
           <!-- Theme toggle -->
           <button
-            @click="toggleColorMode"
             class="p-1.5 rounded-full transition-colors"
-            :class="colorMode.value === 'dark' 
-              ? 'text-slate-400 hover:text-white hover:bg-slate-700' 
+            :class="colorMode.value === 'dark'
+              ? 'text-slate-400 hover:text-white hover:bg-slate-700'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'"
             aria-label="Toggle color theme"
+            @click="toggleColorMode"
           >
-            <span v-if="colorMode.value === 'dark'" class="block w-5 h-5">
+            <span
+              v-if="colorMode.value === 'dark'"
+              class="block w-5 h-5"
+            >
               <!-- Sun icon -->
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                />
               </svg>
             </span>
-            <span v-else class="block w-5 h-5">
+            <span
+              v-else
+              class="block w-5 h-5"
+            >
               <!-- Moon icon -->
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
               </svg>
             </span>
           </button>
@@ -369,7 +395,10 @@ onBeforeUnmount(cleanup)
             >
               {{ score }}
             </span>
-            <span class="text-xs mt-1" :class="colorMode.value === 'dark' ? 'text-slate-400' : 'text-slate-500'">
+            <span
+              class="text-xs mt-1"
+              :class="colorMode.value === 'dark' ? 'text-slate-400' : 'text-slate-500'"
+            >
               momentum score
             </span>
           </div>
@@ -380,8 +409,8 @@ onBeforeUnmount(cleanup)
           <!-- Activity Trend -->
           <div class="flex justify-between items-center">
             <p
-              :class="activityTrend >= 0 
-                ? (colorMode.value === 'dark' ? 'text-teal-400' : 'text-teal-600') 
+              :class="activityTrend >= 0
+                ? (colorMode.value === 'dark' ? 'text-teal-400' : 'text-teal-600')
                 : (colorMode.value === 'dark' ? 'text-red-400' : 'text-red-600')"
               class="flex-grow"
             >
@@ -393,8 +422,8 @@ onBeforeUnmount(cleanup)
             <div class="flex items-center ml-2">
               <span
                 class="text-xs mr-1"
-                :class="activityTrend >= 0 
-                  ? (colorMode.value === 'dark' ? 'text-teal-400' : 'text-teal-600') 
+                :class="activityTrend >= 0
+                  ? (colorMode.value === 'dark' ? 'text-teal-400' : 'text-teal-600')
                   : (colorMode.value === 'dark' ? 'text-red-400' : 'text-red-600')"
               >
                 {{ activityTrend >= 0 ? '↑' : '↓' }}
@@ -411,8 +440,8 @@ onBeforeUnmount(cleanup)
           <!-- Conversion Trend -->
           <div class="flex justify-between items-center">
             <p
-              :class="conversionTrend >= 0 
-                ? (colorMode.value === 'dark' ? 'text-teal-400' : 'text-teal-600') 
+              :class="conversionTrend >= 0
+                ? (colorMode.value === 'dark' ? 'text-teal-400' : 'text-teal-600')
                 : (colorMode.value === 'dark' ? 'text-red-400' : 'text-red-600')"
               class="flex-grow"
             >
@@ -424,8 +453,8 @@ onBeforeUnmount(cleanup)
             <div class="flex items-center ml-2">
               <span
                 class="text-xs mr-1"
-                :class="conversionTrend >= 0 
-                  ? (colorMode.value === 'dark' ? 'text-teal-400' : 'text-teal-600') 
+                :class="conversionTrend >= 0
+                  ? (colorMode.value === 'dark' ? 'text-teal-400' : 'text-teal-600')
                   : (colorMode.value === 'dark' ? 'text-red-400' : 'text-red-600')"
               >
                 {{ conversionTrend >= 0 ? '↑' : '↓' }}
@@ -473,7 +502,7 @@ onBeforeUnmount(cleanup)
                   <span
                     class="font-medium min-w-[32px] text-right"
                     :class="signal.type === 'positive'
-                      ? (colorMode.value === 'dark' ? 'text-emerald-400' : 'text-emerald-600') 
+                      ? (colorMode.value === 'dark' ? 'text-emerald-400' : 'text-emerald-600')
                       : (colorMode.value === 'dark' ? 'text-red-400' : 'text-red-600')"
                   >
                     {{ signal.type === 'positive' ? '+' : '' }}{{ signal.impact }}

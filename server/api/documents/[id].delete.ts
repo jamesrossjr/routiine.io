@@ -1,6 +1,6 @@
+import { eq, and } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
-import { eq, and } from 'drizzle-orm'
 
 /**
  * Delete document
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     if (!documentId) {
       throw createError({
         statusCode: 400,
-        message: 'Document ID is required',
+        message: 'Document ID is required'
       })
     }
 
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     if (!document) {
       throw createError({
         statusCode: 404,
-        message: 'Document not found',
+        message: 'Document not found'
       })
     }
 
@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      message: 'Document deleted successfully',
+      message: 'Document deleted successfully'
     }
   } catch (error: any) {
     console.error('Delete document error:', error)
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while deleting document',
+      message: 'An error occurred while deleting document'
     })
   }
 })

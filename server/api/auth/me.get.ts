@@ -11,20 +11,20 @@ export default defineEventHandler(async (event) => {
     const user = await db.query.users.findFirst({
       where: eq(schema.users.id, authUser.userId),
       columns: {
-        password: false, // Exclude password
-      },
+        password: false // Exclude password
+      }
     })
 
     if (!user) {
       throw createError({
         statusCode: 404,
-        message: 'User not found',
+        message: 'User not found'
       })
     }
 
     // Fetch subscription info
     const subscription = await db.query.subscriptions.findFirst({
-      where: eq(schema.subscriptions.userId, user.id),
+      where: eq(schema.subscriptions.userId, user.id)
     })
 
     return {
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
         avatar: user.avatar,
         subscriptionTier: user.subscriptionTier,
         createdAt: user.createdAt,
-        lastLogin: user.lastLogin,
+        lastLogin: user.lastLogin
       },
       subscription: subscription
         ? {
@@ -45,9 +45,9 @@ export default defineEventHandler(async (event) => {
             status: subscription.status,
             billingCycle: subscription.billingCycle,
             trialEndsAt: subscription.trialEndsAt,
-            autoRenew: subscription.autoRenew,
+            autoRenew: subscription.autoRenew
           }
-        : null,
+        : null
     }
   } catch (error: any) {
     console.error('Get user error:', error)
@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching user data',
+      message: 'An error occurred while fetching user data'
     })
   }
 })

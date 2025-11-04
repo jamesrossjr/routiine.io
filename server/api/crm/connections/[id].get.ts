@@ -1,6 +1,6 @@
+import { eq, and } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
-import { eq, and } from 'drizzle-orm'
 
 /**
  * Get specific CRM connection
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     if (!connectionId) {
       throw createError({
         statusCode: 400,
-        message: 'Connection ID is required',
+        message: 'Connection ID is required'
       })
     }
 
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
         connectedOrgName: schema.crmConnections.connectedOrgName,
         lastSyncAt: schema.crmConnections.lastSyncAt,
         settings: schema.crmConnections.settings,
-        createdAt: schema.crmConnections.createdAt,
+        createdAt: schema.crmConnections.createdAt
       })
       .from(schema.crmConnections)
       .where(
@@ -46,13 +46,13 @@ export default defineEventHandler(async (event) => {
     if (!connection) {
       throw createError({
         statusCode: 404,
-        message: 'CRM connection not found',
+        message: 'CRM connection not found'
       })
     }
 
     return {
       success: true,
-      connection,
+      connection
     }
   } catch (error: any) {
     console.error('Get CRM connection error:', error)
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching CRM connection',
+      message: 'An error occurred while fetching CRM connection'
     })
   }
 })

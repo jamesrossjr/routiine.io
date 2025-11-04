@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     if (!refreshToken) {
       throw createError({
         statusCode: 401,
-        message: 'No refresh token provided',
+        message: 'No refresh token provided'
       })
     }
 
@@ -20,19 +20,19 @@ export default defineEventHandler(async (event) => {
     if (!payload) {
       throw createError({
         statusCode: 401,
-        message: 'Invalid or expired refresh token',
+        message: 'Invalid or expired refresh token'
       })
     }
 
     // Check if refresh token exists in database
     const session = await db.query.sessions.findFirst({
-      where: eq(schema.sessions.refreshToken, refreshToken),
+      where: eq(schema.sessions.refreshToken, refreshToken)
     })
 
     if (!session) {
       throw createError({
         statusCode: 401,
-        message: 'Session not found',
+        message: 'Session not found'
       })
     }
 
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
       throw createError({
         statusCode: 401,
-        message: 'Session expired',
+        message: 'Session expired'
       })
     }
 
@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      message: 'Token refreshed successfully',
+      message: 'Token refreshed successfully'
     }
   } catch (error: any) {
     console.error('Token refresh error:', error)
@@ -69,7 +69,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while refreshing token',
+      message: 'An error occurred while refreshing token'
     })
   }
 })

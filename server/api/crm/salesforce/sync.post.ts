@@ -1,7 +1,7 @@
+import { eq, and } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { syncSalesforceData } from '~~/server/utils/crm-sync'
 import { db, schema } from '~~/server/database'
-import { eq, and } from 'drizzle-orm'
 
 /**
  * Trigger Salesforce data sync
@@ -28,14 +28,14 @@ export default defineEventHandler(async (event) => {
     if (!connection) {
       throw createError({
         statusCode: 404,
-        message: 'Salesforce connection not found',
+        message: 'Salesforce connection not found'
       })
     }
 
     if (connection.connectionStatus !== 'connected') {
       throw createError({
         statusCode: 400,
-        message: 'Salesforce connection is not active',
+        message: 'Salesforce connection is not active'
       })
     }
 
@@ -50,14 +50,14 @@ export default defineEventHandler(async (event) => {
       return {
         success: false,
         message: 'Sync completed with errors',
-        result,
+        result
       }
     }
 
     return {
       success: true,
       message: 'Salesforce data synced successfully',
-      result,
+      result
     }
   } catch (error: any) {
     console.error('Salesforce sync error:', error)
@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while syncing Salesforce data',
+      message: 'An error occurred while syncing Salesforce data'
     })
   }
 })

@@ -17,7 +17,7 @@ const uploadDocumentSchema = z.object({
   filePath: z.string().min(1), // URL or storage path
   clientId: z.string().uuid().optional(),
   opportunityId: z.string().uuid().optional(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.unknown()).optional()
 })
 
 export default defineEventHandler(async (event) => {
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         message: 'Validation failed',
-        data: validationResult.error.errors,
+        data: validationResult.error.errors
       })
     }
 
@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
         fileSize: documentData.fileSize,
         filePath: documentData.filePath,
         trackingId,
-        metadata: documentData.metadata,
+        metadata: documentData.metadata
       })
       .returning()
 
@@ -81,8 +81,8 @@ export default defineEventHandler(async (event) => {
         documentType: newDocument.documentType,
         trackingId: newDocument.trackingId,
         trackableUrl,
-        createdAt: newDocument.createdAt,
-      },
+        createdAt: newDocument.createdAt
+      }
     }
   } catch (error: any) {
     console.error('Document upload error:', error)
@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while uploading document',
+      message: 'An error occurred while uploading document'
     })
   }
 })

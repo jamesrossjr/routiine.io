@@ -1,5 +1,10 @@
+import { scrypt, randomBytes, timingSafeEqual } from 'crypto'
+import { promisify } from 'util'
 import jwt from 'jsonwebtoken'
 import type { H3Event } from 'h3'
+
+// Password hashing utilities
+// Note: Using simple crypto.scrypt for now since argon2 requires native compilation
 
 // JWT Configuration
 const JWT_SECRET = process.env.JWT_SECRET || 'development-secret-change-in-production'
@@ -12,11 +17,6 @@ export interface JWTPayload {
   email: string
   role: string
 }
-
-// Password hashing utilities
-// Note: Using simple crypto.scrypt for now since argon2 requires native compilation
-import { scrypt, randomBytes, timingSafeEqual } from 'crypto'
-import { promisify } from 'util'
 
 const scryptAsync = promisify(scrypt)
 
@@ -44,7 +44,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
  */
 export function generateAccessToken(payload: JWTPayload): string {
   return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN,
+    expiresIn: JWT_EXPIRES_IN
   })
 }
 
@@ -54,7 +54,7 @@ export function generateAccessToken(payload: JWTPayload): string {
 export function generateRefreshToken(payload: JWTPayload, rememberMe: boolean = false): string {
   const expiresIn = rememberMe ? '30d' : JWT_REFRESH_EXPIRES_IN
   return jwt.sign(payload, JWT_REFRESH_SECRET, {
-    expiresIn,
+    expiresIn
   })
 }
 
@@ -90,7 +90,7 @@ export function setAuthCookies(event: H3Event, accessToken: string, refreshToken
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 15 * 60, // 15 minutes
-    path: '/',
+    path: '/'
   })
 
   // Set refresh token cookie (httpOnly, secure in production)
@@ -99,7 +99,7 @@ export function setAuthCookies(event: H3Event, accessToken: string, refreshToken
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 7 * 24 * 60 * 60, // 7 days
-    path: '/',
+    path: '/'
   })
 }
 
@@ -130,7 +130,7 @@ export function requireAuth(event: H3Event): JWTPayload {
   if (!user) {
     throw createError({
       statusCode: 401,
-      message: 'Unauthorized - Please log in',
+      message: 'Unauthorized - Please log in'
     })
   }
   return user
@@ -144,7 +144,7 @@ export function requireRole(event: H3Event, allowedRoles: string[]): JWTPayload 
   if (!allowedRoles.includes(user.role)) {
     throw createError({
       statusCode: 403,
-      message: 'Forbidden - Insufficient permissions',
+      message: 'Forbidden - Insufficient permissions'
     })
   }
   return user

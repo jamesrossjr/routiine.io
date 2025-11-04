@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      score: scoreData,
+      score: scoreData
     }
   } catch (error: any) {
     console.error('Get current momentum score error:', error)
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching momentum score',
+      message: 'An error occurred while fetching momentum score'
     })
   }
 })

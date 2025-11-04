@@ -1,6 +1,6 @@
+import { eq, desc } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
-import { eq, desc } from 'drizzle-orm'
 
 /**
  * List CRM connections
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         connectedOrgName: schema.crmConnections.connectedOrgName,
         lastSyncAt: schema.crmConnections.lastSyncAt,
         settings: schema.crmConnections.settings,
-        createdAt: schema.crmConnections.createdAt,
+        createdAt: schema.crmConnections.createdAt
       })
       .from(schema.crmConnections)
       .where(eq(schema.crmConnections.userId, user.userId))
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       connections,
-      count: connections.length,
+      count: connections.length
     }
   } catch (error: any) {
     console.error('List CRM connections error:', error)
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching CRM connections',
+      message: 'An error occurred while fetching CRM connections'
     })
   }
 })

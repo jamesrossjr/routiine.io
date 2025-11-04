@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     if (!id) {
       throw createError({
         statusCode: 400,
-        message: 'Signal ID is required',
+        message: 'Signal ID is required'
       })
     }
 
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const signal = await db.query.signals.findFirst({
       where: and(
         eq(schema.signals.id, id),
-        eq(schema.signals.userId, user.userId),
+        eq(schema.signals.userId, user.userId)
       ),
       with: {
         client: {
@@ -33,30 +33,30 @@ export default defineEventHandler(async (event) => {
             id: true,
             name: true,
             company: true,
-            email: true,
-          },
+            email: true
+          }
         },
         opportunity: {
           columns: {
             id: true,
             title: true,
             value: true,
-            stage: true,
-          },
-        },
-      },
+            stage: true
+          }
+        }
+      }
     })
 
     if (!signal) {
       throw createError({
         statusCode: 404,
-        message: 'Signal not found',
+        message: 'Signal not found'
       })
     }
 
     return {
       success: true,
-      signal,
+      signal
     }
   } catch (error: any) {
     console.error('Get signal error:', error)
@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching signal',
+      message: 'An error occurred while fetching signal'
     })
   }
 })

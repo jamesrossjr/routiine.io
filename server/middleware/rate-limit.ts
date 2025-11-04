@@ -11,7 +11,7 @@ interface RateLimitConfig {
 
 // In-memory store for rate limiting
 // In production, use Redis for distributed rate limiting
-const requestStore = new Map<string, { count: number; resetTime: number }>()
+const requestStore = new Map<string, { count: number, resetTime: number }>()
 
 // Cleanup expired entries every 5 minutes
 setInterval(() => {
@@ -45,7 +45,7 @@ export function createRateLimiter(config: RateLimitConfig) {
     if (!record || record.resetTime < now) {
       record = {
         count: 0,
-        resetTime: now + windowMs,
+        resetTime: now + windowMs
       }
       requestStore.set(key, record)
     }
@@ -65,7 +65,7 @@ export function createRateLimiter(config: RateLimitConfig) {
 
       throw createError({
         statusCode: 429,
-        message: 'Too many requests. Please try again later.',
+        message: 'Too many requests. Please try again later.'
       })
     }
 
@@ -81,7 +81,7 @@ export function createRateLimiter(config: RateLimitConfig) {
  */
 export const authRateLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  maxRequests: 5, // 5 requests per 15 minutes
+  maxRequests: 5 // 5 requests per 15 minutes
 })
 
 /**
@@ -89,7 +89,7 @@ export const authRateLimiter = createRateLimiter({
  */
 export const apiRateLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  maxRequests: 100, // 100 requests per 15 minutes
+  maxRequests: 100 // 100 requests per 15 minutes
 })
 
 /**
@@ -97,5 +97,5 @@ export const apiRateLimiter = createRateLimiter({
  */
 export const strictRateLimiter = createRateLimiter({
   windowMs: 60 * 60 * 1000, // 1 hour
-  maxRequests: 3, // 3 requests per hour
+  maxRequests: 3 // 3 requests per hour
 })

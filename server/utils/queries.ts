@@ -18,7 +18,7 @@ export async function getUserSignals(
     priority?: 'high' | 'medium' | 'low'
     startDate?: Date
     endDate?: Date
-  } = {},
+  } = {}
 ) {
   const {
     limit = 20,
@@ -27,7 +27,7 @@ export async function getUserSignals(
     category,
     priority,
     startDate,
-    endDate,
+    endDate
   } = options
 
   const conditions = [eq(schema.signals.userId, userId)]
@@ -58,18 +58,18 @@ export async function getUserSignals(
         columns: {
           id: true,
           name: true,
-          company: true,
-        },
+          company: true
+        }
       },
       opportunity: {
         columns: {
           id: true,
           title: true,
           value: true,
-          stage: true,
-        },
-      },
-    },
+          stage: true
+        }
+      }
+    }
   })
 
   // Get total count for pagination
@@ -81,7 +81,7 @@ export async function getUserSignals(
   return {
     signals,
     total: count,
-    hasMore: offset + signals.length < count,
+    hasMore: offset + signals.length < count
   }
 }
 
@@ -97,7 +97,7 @@ export async function getUserActivities(
     activityType?: string
     startDate?: Date
     endDate?: Date
-  } = {},
+  } = {}
 ) {
   const {
     limit = 20,
@@ -105,7 +105,7 @@ export async function getUserActivities(
     clientId,
     activityType,
     startDate,
-    endDate,
+    endDate
   } = options
 
   const conditions = [eq(schema.activities.userId, userId)]
@@ -133,10 +133,10 @@ export async function getUserActivities(
         columns: {
           id: true,
           name: true,
-          company: true,
-        },
-      },
-    },
+          company: true
+        }
+      }
+    }
   })
 
   const [{ count }] = await db
@@ -147,7 +147,7 @@ export async function getUserActivities(
   return {
     activities,
     total: count,
-    hasMore: offset + activities.length < count,
+    hasMore: offset + activities.length < count
   }
 }
 
@@ -163,10 +163,10 @@ export async function getUserOpportunitiesByStage(userId: string) {
         columns: {
           id: true,
           name: true,
-          company: true,
-        },
-      },
-    },
+          company: true
+        }
+      }
+    }
   })
 
   // Group by stage
@@ -178,7 +178,7 @@ export async function getUserOpportunitiesByStage(userId: string) {
       acc[opp.stage].push(opp)
       return acc
     },
-    {} as Record<string, typeof opportunities>,
+    {} as Record<string, typeof opportunities>
   )
 
   return grouped
@@ -193,7 +193,7 @@ export async function getUserTasks(
     status?: 'pending' | 'in_progress' | 'completed'
     limit?: number
     offset?: number
-  } = {},
+  } = {}
 ) {
   const { status, limit = 50, offset = 0 } = options
 
@@ -213,10 +213,10 @@ export async function getUserTasks(
         columns: {
           id: true,
           name: true,
-          company: true,
-        },
-      },
-    },
+          company: true
+        }
+      }
+    }
   })
 
   return tasks
@@ -228,7 +228,7 @@ export async function getUserTasks(
 export async function getLatestMomentumScore(userId: string) {
   return await db.query.momentumScores.findFirst({
     where: eq(schema.momentumScores.userId, userId),
-    orderBy: [desc(schema.momentumScores.calculatedAt)],
+    orderBy: [desc(schema.momentumScores.calculatedAt)]
   })
 }
 
@@ -241,7 +241,7 @@ export async function getMomentumScoreHistory(
     startDate?: Date
     endDate?: Date
     limit?: number
-  } = {},
+  } = {}
 ) {
   const { startDate, endDate, limit = 90 } = options
 
@@ -257,7 +257,7 @@ export async function getMomentumScoreHistory(
   return await db.query.momentumScores.findMany({
     where: and(...conditions),
     orderBy: [desc(schema.momentumScores.calculatedAt)],
-    limit,
+    limit
   })
 }
 
@@ -271,7 +271,7 @@ export async function getUserSignalAssessments(
     isDraft?: boolean
     limit?: number
     offset?: number
-  } = {},
+  } = {}
 ) {
   const { clientId, isDraft, limit = 20, offset = 0 } = options
 
@@ -294,10 +294,10 @@ export async function getUserSignalAssessments(
         columns: {
           id: true,
           name: true,
-          company: true,
-        },
-      },
-    },
+          company: true
+        }
+      }
+    }
   })
 }
 
@@ -318,8 +318,8 @@ export async function getDashboardStats(userId: string) {
     .where(
       and(
         eq(schema.signals.userId, userId),
-        gte(schema.signals.timestamp, sevenDaysAgo),
-      ),
+        gte(schema.signals.timestamp, sevenDaysAgo)
+      )
     )
 
   // Get activity count (last 7 days)
@@ -329,19 +329,19 @@ export async function getDashboardStats(userId: string) {
     .where(
       and(
         eq(schema.activities.userId, userId),
-        gte(schema.activities.timestamp, sevenDaysAgo),
-      ),
+        gte(schema.activities.timestamp, sevenDaysAgo)
+      )
     )
 
   // Get open opportunities count and total value
   const openOpps = await db.query.opportunities.findMany({
     where: and(
       eq(schema.opportunities.userId, userId),
-      inArray(schema.opportunities.stage, ['discovery', 'proposal', 'negotiation']),
+      inArray(schema.opportunities.stage, ['discovery', 'proposal', 'negotiation'])
     ),
     columns: {
-      value: true,
-    },
+      value: true
+    }
   })
 
   const pipelineValue = openOpps.reduce((sum, opp) => {
@@ -355,8 +355,8 @@ export async function getDashboardStats(userId: string) {
     .where(
       and(
         eq(schema.tasks.userId, userId),
-        inArray(schema.tasks.status, ['pending', 'in_progress']),
-      ),
+        inArray(schema.tasks.status, ['pending', 'in_progress'])
+      )
     )
 
   // Get latest momentum score
@@ -366,11 +366,11 @@ export async function getDashboardStats(userId: string) {
   const allOpps = await db.query.opportunities.findMany({
     where: and(
       eq(schema.opportunities.userId, userId),
-      gte(schema.opportunities.createdAt, thirtyDaysAgo),
+      gte(schema.opportunities.createdAt, thirtyDaysAgo)
     ),
     columns: {
-      stage: true,
-    },
+      stage: true
+    }
   })
 
   const closedWon = allOpps.filter(o => o.stage === 'closed_won').length
@@ -387,8 +387,8 @@ export async function getDashboardStats(userId: string) {
     momentumScore: momentumScore?.score || 0,
     momentumTrend: {
       activity: momentumScore?.activityTrend || 0,
-      conversion: momentumScore?.conversionTrend || 0,
-    },
+      conversion: momentumScore?.conversionTrend || 0
+    }
   }
 }
 
@@ -404,8 +404,8 @@ export async function searchClients(userId: string, query: string, limit: number
         ${schema.clients.name} ILIKE ${`%${query}%`} OR
         ${schema.clients.company} ILIKE ${`%${query}%`} OR
         ${schema.clients.email} ILIKE ${`%${query}%`}
-      )`,
+      )`
     ),
-    limit,
+    limit
   })
 }

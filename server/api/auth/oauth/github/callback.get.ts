@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     if (!clientId || !clientSecret) {
       throw createError({
         statusCode: 500,
-        message: 'GitHub OAuth not configured',
+        message: 'GitHub OAuth not configured'
       })
     }
 
@@ -49,14 +49,14 @@ export default defineEventHandler(async (event) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify({
         client_id: clientId,
         client_secret: clientSecret,
         code,
-        redirect_uri: redirectUri,
-      }),
+        redirect_uri: redirectUri
+      })
     })
 
     if (!tokenResponse.ok) {
@@ -76,8 +76,8 @@ export default defineEventHandler(async (event) => {
     const profileResponse = await fetch('https://api.github.com/user', {
       headers: {
         Authorization: `Bearer ${access_token}`,
-        Accept: 'application/vnd.github.v3+json',
-      },
+        Accept: 'application/vnd.github.v3+json'
+      }
     })
 
     if (!profileResponse.ok) {
@@ -92,8 +92,8 @@ export default defineEventHandler(async (event) => {
     const emailResponse = await fetch('https://api.github.com/user/emails', {
       headers: {
         Authorization: `Bearer ${access_token}`,
-        Accept: 'application/vnd.github.v3+json',
-      },
+        Accept: 'application/vnd.github.v3+json'
+      }
     })
 
     let email = profile.email
@@ -111,7 +111,7 @@ export default defineEventHandler(async (event) => {
 
     // Check if user exists
     let user = await db.query.users.findFirst({
-      where: eq(schema.users.email, email),
+      where: eq(schema.users.email, email)
     })
 
     if (!user) {
@@ -124,7 +124,7 @@ export default defineEventHandler(async (event) => {
           password: null, // OAuth users don't have passwords
           role: 'sales_rep',
           subscriptionTier: 'basic',
-          avatar: avatar_url,
+          avatar: avatar_url
         })
         .returning()
 
@@ -141,7 +141,7 @@ export default defineEventHandler(async (event) => {
         price: '0.00',
         status: 'trial',
         trialEndsAt,
-        autoRenew: true,
+        autoRenew: true
       })
     }
 
@@ -149,8 +149,8 @@ export default defineEventHandler(async (event) => {
     const existingConnection = await db.query.oauthConnections.findFirst({
       where: and(
         eq(schema.oauthConnections.userId, user.id),
-        eq(schema.oauthConnections.provider, 'github'),
-      ),
+        eq(schema.oauthConnections.provider, 'github')
+      )
     })
 
     if (existingConnection) {
@@ -158,7 +158,7 @@ export default defineEventHandler(async (event) => {
       await db
         .update(schema.oauthConnections)
         .set({
-          accessToken: access_token,
+          accessToken: access_token
         })
         .where(eq(schema.oauthConnections.id, existingConnection.id))
     } else {
@@ -167,7 +167,7 @@ export default defineEventHandler(async (event) => {
         userId: user.id,
         provider: 'github',
         providerId: githubId.toString(),
-        accessToken: access_token,
+        accessToken: access_token
       })
     }
 
@@ -181,7 +181,7 @@ export default defineEventHandler(async (event) => {
     const tokenPayload = {
       userId: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role
     }
 
     const jwtAccessToken = generateAccessToken(tokenPayload)
@@ -194,7 +194,7 @@ export default defineEventHandler(async (event) => {
     await db.insert(schema.sessions).values({
       userId: user.id,
       refreshToken: jwtRefreshToken,
-      expiresAt: refreshExpiresAt,
+      expiresAt: refreshExpiresAt
     })
 
     // Set authentication cookies

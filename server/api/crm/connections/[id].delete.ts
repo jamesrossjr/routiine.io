@@ -1,6 +1,6 @@
+import { eq, and } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
-import { eq, and } from 'drizzle-orm'
 
 /**
  * Disconnect CRM
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     if (!connectionId) {
       throw createError({
         statusCode: 400,
-        message: 'Connection ID is required',
+        message: 'Connection ID is required'
       })
     }
 
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     if (!connection) {
       throw createError({
         statusCode: 404,
-        message: 'CRM connection not found',
+        message: 'CRM connection not found'
       })
     }
 
@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      message: 'CRM connection removed successfully',
+      message: 'CRM connection removed successfully'
     }
   } catch (error: any) {
     console.error('Disconnect CRM error:', error)
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while disconnecting CRM',
+      message: 'An error occurred while disconnecting CRM'
     })
   }
 })

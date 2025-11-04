@@ -21,9 +21,9 @@ export default defineEventHandler(async (event) => {
         name: true,
         email: true,
         avatar: true,
-        role: true,
+        role: true
       },
-      where: eq(schema.users.role, 'sales_rep'),
+      where: eq(schema.users.role, 'sales_rep')
     })
 
     // Get latest momentum score for each user
@@ -31,29 +31,29 @@ export default defineEventHandler(async (event) => {
       users.map(async (teamMember) => {
         const latestScore = await db.query.momentumScores.findFirst({
           where: eq(schema.momentumScores.userId, teamMember.id),
-          orderBy: (scores, { desc }) => [desc(scores.calculatedAt)],
+          orderBy: (scores, { desc }) => [desc(scores.calculatedAt)]
         })
 
         return {
           user: teamMember,
-          score: latestScore || null,
+          score: latestScore || null
         }
-      }),
+      })
     )
 
     // Calculate team statistics
-    const scores = teamScores.map((ts) => ts.score?.score || 0)
+    const scores = teamScores.map(ts => ts.score?.score || 0)
     const teamAverage = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0
     const topPerformer = teamScores.reduce(
       (best, current) =>
         (current.score?.score || 0) > (best.score?.score || 0) ? current : best,
-      teamScores[0],
+      teamScores[0]
     )
 
     return {
       success: true,
       teamScores: teamScores.sort(
-        (a, b) => (b.score?.score || 0) - (a.score?.score || 0),
+        (a, b) => (b.score?.score || 0) - (a.score?.score || 0)
       ),
       statistics: {
         teamAverage: Math.round(teamAverage),
@@ -61,10 +61,10 @@ export default defineEventHandler(async (event) => {
         topPerformer: topPerformer
           ? {
               name: topPerformer.user.name,
-              score: topPerformer.score?.score || 0,
+              score: topPerformer.score?.score || 0
             }
-          : null,
-      },
+          : null
+      }
     }
   } catch (error: any) {
     console.error('Team scores error:', error)
@@ -75,7 +75,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching team scores',
+      message: 'An error occurred while fetching team scores'
     })
   }
 })

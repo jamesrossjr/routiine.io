@@ -1,6 +1,6 @@
+import { eq, and, desc } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
-import { eq, and, desc } from 'drizzle-orm'
 
 /**
  * List user's documents
@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
         lastViewedAt: schema.documents.lastViewedAt,
         clientId: schema.documents.clientId,
         opportunityId: schema.documents.opportunityId,
-        createdAt: schema.documents.createdAt,
+        createdAt: schema.documents.createdAt
       })
       .from(schema.documents)
       .where(whereClause)
@@ -48,9 +48,9 @@ export default defineEventHandler(async (event) => {
       .offset(offset)
 
     // Build trackable URLs for each document
-    const documentsWithUrls = documents.map((doc) => ({
+    const documentsWithUrls = documents.map(doc => ({
       ...doc,
-      trackableUrl: `${process.env.APP_URL}/api/documents/view/${doc.trackingId}`,
+      trackableUrl: `${process.env.APP_URL}/api/documents/view/${doc.trackingId}`
     }))
 
     return {
@@ -59,8 +59,8 @@ export default defineEventHandler(async (event) => {
       pagination: {
         limit,
         offset,
-        total: documents.length,
-      },
+        total: documents.length
+      }
     }
   } catch (error: any) {
     console.error('List documents error:', error)
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching documents',
+      message: 'An error occurred while fetching documents'
     })
   }
 })

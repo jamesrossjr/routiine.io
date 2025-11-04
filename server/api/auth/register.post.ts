@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         message: 'Validation failed',
-        data: validationResult.error.errors,
+        data: validationResult.error.errors
       })
     }
 
@@ -21,13 +21,13 @@ export default defineEventHandler(async (event) => {
 
     // Check if user already exists
     const existingUser = await db.query.users.findFirst({
-      where: eq(schema.users.email, email),
+      where: eq(schema.users.email, email)
     })
 
     if (existingUser) {
       throw createError({
         statusCode: 409,
-        message: 'An account with this email already exists',
+        message: 'An account with this email already exists'
       })
     }
 
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
         email,
         password: hashedPassword,
         role: 'sales_rep',
-        subscriptionTier: 'basic',
+        subscriptionTier: 'basic'
       })
       .returning({
         id: schema.users.id,
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
         email: schema.users.email,
         role: schema.users.role,
         subscriptionTier: schema.users.subscriptionTier,
-        createdAt: schema.users.createdAt,
+        createdAt: schema.users.createdAt
       })
 
     // Create initial subscription (14-day trial)
@@ -64,14 +64,14 @@ export default defineEventHandler(async (event) => {
       price: '0.00',
       status: 'trial',
       trialEndsAt,
-      autoRenew: true,
+      autoRenew: true
     })
 
     // Generate JWT tokens
     const tokenPayload = {
       userId: newUser.id,
       email: newUser.email,
-      role: newUser.role,
+      role: newUser.role
     }
 
     const accessToken = generateAccessToken(tokenPayload)
@@ -84,7 +84,7 @@ export default defineEventHandler(async (event) => {
     await db.insert(schema.sessions).values({
       userId: newUser.id,
       refreshToken,
-      expiresAt: refreshExpiresAt,
+      expiresAt: refreshExpiresAt
     })
 
     // Set authentication cookies
@@ -102,8 +102,8 @@ export default defineEventHandler(async (event) => {
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
-        subscriptionTier: newUser.subscriptionTier,
-      },
+        subscriptionTier: newUser.subscriptionTier
+      }
     }
   } catch (error: any) {
     // Log error for debugging
@@ -116,7 +116,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred during registration',
+      message: 'An error occurred during registration'
     })
   }
 })

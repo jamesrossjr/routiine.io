@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
       category,
       priority,
       startDate,
-      endDate,
+      endDate
     })
 
     return {
@@ -38,8 +38,8 @@ export default defineEventHandler(async (event) => {
         total: result.total,
         limit,
         offset,
-        hasMore: result.hasMore,
-      },
+        hasMore: result.hasMore
+      }
     }
   } catch (error: any) {
     console.error('Get signals error:', error)
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while fetching signals',
+      message: 'An error occurred while fetching signals'
     })
   }
 })

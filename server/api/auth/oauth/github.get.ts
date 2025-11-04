@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   if (!clientId) {
     throw createError({
       statusCode: 500,
-      message: 'GitHub OAuth not configured',
+      message: 'GitHub OAuth not configured'
     })
   }
 
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 600, // 10 minutes
-    path: '/',
+    path: '/'
   })
 
   // Build GitHub OAuth URL
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     redirect_uri: redirectUri,
     scope: 'user:email read:user',
     state,
-    allow_signup: 'true',
+    allow_signup: 'true'
   })
 
   const authUrl = `https://github.com/login/oauth/authorize?${params.toString()}`

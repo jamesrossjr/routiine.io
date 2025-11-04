@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     if (!clientId || !clientSecret) {
       throw createError({
         statusCode: 500,
-        message: 'Google OAuth not configured',
+        message: 'Google OAuth not configured'
       })
     }
 
@@ -48,15 +48,15 @@ export default defineEventHandler(async (event) => {
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       body: new URLSearchParams({
         code,
         client_id: clientId,
         client_secret: clientSecret,
         redirect_uri: redirectUri,
-        grant_type: 'authorization_code',
-      }),
+        grant_type: 'authorization_code'
+      })
     })
 
     if (!tokenResponse.ok) {
@@ -71,8 +71,8 @@ export default defineEventHandler(async (event) => {
     // Fetch user profile from Google
     const profileResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
       headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
+        Authorization: `Bearer ${access_token}`
+      }
     })
 
     if (!profileResponse.ok) {
@@ -85,7 +85,7 @@ export default defineEventHandler(async (event) => {
 
     // Check if user exists
     let user = await db.query.users.findFirst({
-      where: eq(schema.users.email, email),
+      where: eq(schema.users.email, email)
     })
 
     if (!user) {
@@ -98,7 +98,7 @@ export default defineEventHandler(async (event) => {
           password: null, // OAuth users don't have passwords
           role: 'sales_rep',
           subscriptionTier: 'basic',
-          avatar: picture,
+          avatar: picture
         })
         .returning()
 
@@ -115,7 +115,7 @@ export default defineEventHandler(async (event) => {
         price: '0.00',
         status: 'trial',
         trialEndsAt,
-        autoRenew: true,
+        autoRenew: true
       })
     }
 
@@ -123,8 +123,8 @@ export default defineEventHandler(async (event) => {
     const existingConnection = await db.query.oauthConnections.findFirst({
       where: and(
         eq(schema.oauthConnections.userId, user.id),
-        eq(schema.oauthConnections.provider, 'google'),
-      ),
+        eq(schema.oauthConnections.provider, 'google')
+      )
     })
 
     const tokenExpiry = new Date()
@@ -137,7 +137,7 @@ export default defineEventHandler(async (event) => {
         .set({
           accessToken: access_token,
           refreshToken: refresh_token || existingConnection.refreshToken,
-          tokenExpiry,
+          tokenExpiry
         })
         .where(eq(schema.oauthConnections.id, existingConnection.id))
     } else {
@@ -148,7 +148,7 @@ export default defineEventHandler(async (event) => {
         providerId: googleId,
         accessToken: access_token,
         refreshToken: refresh_token,
-        tokenExpiry,
+        tokenExpiry
       })
     }
 
@@ -162,7 +162,7 @@ export default defineEventHandler(async (event) => {
     const tokenPayload = {
       userId: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role
     }
 
     const jwtAccessToken = generateAccessToken(tokenPayload)
@@ -175,7 +175,7 @@ export default defineEventHandler(async (event) => {
     await db.insert(schema.sessions).values({
       userId: user.id,
       refreshToken: jwtRefreshToken,
-      expiresAt: refreshExpiresAt,
+      expiresAt: refreshExpiresAt
     })
 
     // Set authentication cookies

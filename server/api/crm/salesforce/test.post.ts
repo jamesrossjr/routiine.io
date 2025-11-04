@@ -1,6 +1,6 @@
+import { eq, and } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
-import { eq, and } from 'drizzle-orm'
 
 /**
  * Test Salesforce connection
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
     if (!connection) {
       throw createError({
         statusCode: 404,
-        message: 'Salesforce connection not found',
+        message: 'Salesforce connection not found'
       })
     }
 
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     if (!instanceUrl || !connection.connectionToken) {
       throw createError({
         statusCode: 400,
-        message: 'Invalid Salesforce connection configuration',
+        message: 'Invalid Salesforce connection configuration'
       })
     }
 
@@ -46,9 +46,9 @@ export default defineEventHandler(async (event) => {
 
     const response = await fetch(testUrl, {
       headers: {
-        Authorization: `Bearer ${connection.connectionToken}`,
-        'Content-Type': 'application/json',
-      },
+        'Authorization': `Bearer ${connection.connectionToken}`,
+        'Content-Type': 'application/json'
+      }
     })
 
     if (!response.ok) {
@@ -58,19 +58,19 @@ export default defineEventHandler(async (event) => {
         await db
           .update(schema.crmConnections)
           .set({
-            connectionStatus: 'error',
+            connectionStatus: 'error'
           })
           .where(eq(schema.crmConnections.id, connection.id))
 
         throw createError({
           statusCode: 401,
-          message: 'Salesforce connection expired. Please reconnect.',
+          message: 'Salesforce connection expired. Please reconnect.'
         })
       }
 
       throw createError({
         statusCode: response.status,
-        message: 'Failed to connect to Salesforce API',
+        message: 'Failed to connect to Salesforce API'
       })
     }
 
@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
     await db
       .update(schema.crmConnections)
       .set({
-        connectionStatus: 'connected',
+        connectionStatus: 'connected'
       })
       .where(eq(schema.crmConnections.id, connection.id))
 
@@ -96,9 +96,9 @@ export default defineEventHandler(async (event) => {
         apiVersion: 'v58.0',
         limits: {
           dailyApiRequests: limitsData.DailyApiRequests,
-          dataStorage: limitsData.DataStorageMB,
-        },
-      },
+          dataStorage: limitsData.DataStorageMB
+        }
+      }
     }
   } catch (error: any) {
     console.error('Salesforce test error:', error)
@@ -109,7 +109,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while testing Salesforce connection',
+      message: 'An error occurred while testing Salesforce connection'
     })
   }
 })

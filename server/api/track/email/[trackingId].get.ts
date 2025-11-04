@@ -10,7 +10,7 @@ import { db, schema } from '~~/server/database'
 // 1x1 transparent GIF pixel
 const TRACKING_PIXEL = Buffer.from(
   'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-  'base64',
+  'base64'
 )
 
 export default defineEventHandler(async (event) => {
@@ -52,18 +52,18 @@ export default defineEventHandler(async (event) => {
     const existingSignals = await db.query.signals.findMany({
       where: and(
         eq(schema.signals.userId, userId),
-        eq(schema.signals.category, 'email_open'),
+        eq(schema.signals.category, 'email_open')
       ),
       orderBy: (signals, { desc }) => [desc(signals.timestamp)],
-      limit: 10,
+      limit: 10
     })
 
     // Check if we already tracked this email recently (within 1 hour)
     const recentOpen = existingSignals.find((signal) => {
       const metadata = signal.metadata as any
       return (
-        metadata?.emailId === emailId &&
-        new Date().getTime() - new Date(signal.timestamp).getTime() < 3600000
+        metadata?.emailId === emailId
+        && new Date().getTime() - new Date(signal.timestamp).getTime() < 3600000
       )
     })
 
@@ -80,8 +80,8 @@ export default defineEventHandler(async (event) => {
             ...metadata,
             openCount,
             lastOpenedAt: new Date().toISOString(),
-            lastUserAgent: userAgent,
-          },
+            lastUserAgent: userAgent
+          }
         })
         .where(eq(schema.signals.id, recentOpen.id))
 
@@ -103,8 +103,8 @@ export default defineEventHandler(async (event) => {
           ip,
           referer,
           openCount: 1,
-          firstOpen: isFirstEverOpen,
-        },
+          firstOpen: isFirstEverOpen
+        }
       })
 
       console.log(`Email opened: ${emailId} (first: ${isFirstEverOpen})`)

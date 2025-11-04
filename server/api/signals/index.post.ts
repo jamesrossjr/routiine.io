@@ -20,12 +20,12 @@ const createSignalSchema = z.object({
     'bounce',
     'session_timeout',
     'document_view',
-    'crm_activity',
+    'crm_activity'
   ]),
   name: z.string().min(1).max(255),
   impact: z.number().int().min(-5).max(6),
   priority: z.enum(['high', 'medium', 'low']).default('medium'),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.any()).optional()
 })
 
 export default defineEventHandler(async (event) => {
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         message: 'Validation failed',
-        data: validationResult.error.errors,
+        data: validationResult.error.errors
       })
     }
 
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
         name: signalData.name,
         impact: signalData.impact,
         priority: signalData.priority,
-        metadata: signalData.metadata || null,
+        metadata: signalData.metadata || null
       })
       .returning()
 
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       message: 'Signal created successfully',
-      signal,
+      signal
     }
   } catch (error: any) {
     console.error('Create signal error:', error)
@@ -82,7 +82,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while creating signal',
+      message: 'An error occurred while creating signal'
     })
   }
 })

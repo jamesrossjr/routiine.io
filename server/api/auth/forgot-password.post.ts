@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         message: 'Validation failed',
-        data: validationResult.error.errors,
+        data: validationResult.error.errors
       })
     }
 
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 
     // Find user by email
     const user = await db.query.users.findFirst({
-      where: eq(schema.users.email, email),
+      where: eq(schema.users.email, email)
     })
 
     // For security, always return success even if user doesn't exist
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
       console.log(`Password reset requested for non-existent email: ${email}`)
       return {
         success: true,
-        message: 'If an account exists with this email, a password reset link has been sent.',
+        message: 'If an account exists with this email, a password reset link has been sent.'
       }
     }
 
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
       // Still return success to prevent enumeration
       return {
         success: true,
-        message: 'If an account exists with this email, a password reset link has been sent.',
+        message: 'If an account exists with this email, a password reset link has been sent.'
       }
     }
 
@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
     await db.insert(schema.passwordResetTokens).values({
       userId: user.id,
       token: resetToken,
-      expiresAt,
+      expiresAt
     })
 
     // TODO: Send password reset email
@@ -77,7 +77,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: 'If an account exists with this email, a password reset link has been sent.',
       // In development, include the link for testing
-      ...(process.env.NODE_ENV === 'development' && { resetLink }),
+      ...(process.env.NODE_ENV === 'development' && { resetLink })
     }
   } catch (error: any) {
     console.error('Forgot password error:', error)
@@ -88,7 +88,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'An error occurred while processing your request',
+      message: 'An error occurred while processing your request'
     })
   }
 })
