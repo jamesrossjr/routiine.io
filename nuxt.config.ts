@@ -28,6 +28,17 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-07-11',
 
+  typescript: {
+    strict: false,
+    typeCheck: true,
+    shim: false,
+    tsConfig: {
+      compilerOptions: {
+        skipLibCheck: true
+      }
+    }
+  },
+
   nitro: {
     prerender: {
       crawlLinks: true,
