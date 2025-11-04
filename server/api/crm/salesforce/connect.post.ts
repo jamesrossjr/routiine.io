@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
       authUrl: authUrl.toString(),
       message: 'Redirect user to authUrl to authorize'
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Salesforce connect error:', error)
 
     if (error.statusCode) {

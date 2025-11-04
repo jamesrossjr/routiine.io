@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
       message: 'Salesforce data synced successfully',
       result
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Salesforce sync error:', error)
 
     if (error.statusCode) {

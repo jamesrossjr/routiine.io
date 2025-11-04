@@ -45,6 +45,12 @@ interface SalesforceTask {
   ActivityDate?: string
 }
 
+interface SalesforceSettings {
+  instanceUrl?: string
+  userId?: string
+  orgId?: string
+}
+
 /**
  * Sync Salesforce data to Routiine.io
  */
@@ -78,7 +84,7 @@ export async function syncSalesforceData(
       throw new Error('Salesforce connection not found')
     }
 
-    const settings = connection.settings as any
+    const settings = connection.settings as SalesforceSettings | null
     const instanceUrl = settings?.instanceUrl
     const accessToken = connection.connectionToken
 
@@ -116,7 +122,7 @@ export async function syncSalesforceData(
     result.success = result.errors.length === 0
 
     return result
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Salesforce sync error:', error)
     result.success = false
     result.errors.push(error.message)
@@ -198,13 +204,13 @@ async function syncSalesforceContacts(
         }
 
         synced++
-      } catch (error: any) {
+      } catch (error: unknown) {
         errors.push(`Contact ${contact.Name}: ${error.message}`)
       }
     }
 
     console.log(`Synced ${synced} contacts from Salesforce`)
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors.push(`Contacts sync failed: ${error.message}`)
   }
 
@@ -303,13 +309,13 @@ async function syncSalesforceOpportunities(
         }
 
         synced++
-      } catch (error: any) {
+      } catch (error: unknown) {
         errors.push(`Opportunity ${opp.Name}: ${error.message}`)
       }
     }
 
     console.log(`Synced ${synced} opportunities from Salesforce`)
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors.push(`Opportunities sync failed: ${error.message}`)
   }
 
@@ -408,13 +414,13 @@ async function syncSalesforceTasks(
 
           synced++
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         errors.push(`Task ${task.Subject}: ${error.message}`)
       }
     }
 
     console.log(`Synced ${synced} tasks from Salesforce`)
-  } catch (error: any) {
+  } catch (error: unknown) {
     errors.push(`Tasks sync failed: ${error.message}`)
   }
 

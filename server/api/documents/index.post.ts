@@ -84,7 +84,7 @@ export default defineEventHandler(async (event) => {
         createdAt: newDocument.createdAt
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Document upload error:', error)
 
     if (error.statusCode) {

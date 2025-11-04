@@ -2,6 +2,12 @@ import { eq, and } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
 
+interface SalesforceSettings {
+  instanceUrl?: string
+  userId?: string
+  orgId?: string
+}
+
 /**
  * Test Salesforce connection
  * Verifies that the Salesforce connection is working
@@ -31,7 +37,7 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const settings = connection.settings as any
+    const settings = connection.settings as SalesforceSettings | null
     const instanceUrl = settings?.instanceUrl
 
     if (!instanceUrl || !connection.connectionToken) {
@@ -100,7 +106,7 @@ export default defineEventHandler(async (event) => {
         }
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Salesforce test error:', error)
 
     if (error.statusCode) {

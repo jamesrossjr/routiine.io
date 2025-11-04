@@ -1,4 +1,5 @@
 import { eq, and, desc } from 'drizzle-orm'
+import type { SQL } from 'drizzle-orm'
 import { requireAuth } from '~~/server/utils/auth'
 import { db, schema } from '~~/server/database'
 
@@ -19,10 +20,10 @@ export default defineEventHandler(async (event) => {
     const clientId = query.clientId as string | undefined
 
     // Build query
-    let whereClause = eq(schema.documents.userId, user.userId)
+    let whereClause: SQL | undefined = eq(schema.documents.userId, user.userId)
 
     if (clientId) {
-      whereClause = and(whereClause, eq(schema.documents.clientId, clientId)) as any
+      whereClause = and(whereClause, eq(schema.documents.clientId, clientId))
     }
 
     // Get documents
@@ -62,7 +63,7 @@ export default defineEventHandler(async (event) => {
         total: documents.length
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('List documents error:', error)
 
     if (error.statusCode) {

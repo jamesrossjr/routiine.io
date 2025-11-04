@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       connection
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get CRM connection error:', error)
 
     if (error.statusCode) {

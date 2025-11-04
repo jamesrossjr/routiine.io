@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
         trackableUrl: `${process.env.APP_URL}/api/documents/view/${document.trackingId}`
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get document error:', error)
 
     if (error.statusCode) {

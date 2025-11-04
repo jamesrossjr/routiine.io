@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: 'CRM connection removed successfully'
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Disconnect CRM error:', error)
 
     if (error.statusCode) {

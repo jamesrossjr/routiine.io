@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: 'Document deleted successfully'
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Delete document error:', error)
 
     if (error.statusCode) {

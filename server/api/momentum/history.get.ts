@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
         dataPoints: history.length
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get momentum history error:', error)
 
     if (error.statusCode) {

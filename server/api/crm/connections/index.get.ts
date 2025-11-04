@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
       connections,
       count: connections.length
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('List CRM connections error:', error)
 
     if (error.statusCode) {

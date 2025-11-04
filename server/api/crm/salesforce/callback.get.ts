@@ -133,7 +133,7 @@ export default defineEventHandler(async (event) => {
     // Redirect to success page
     // In production, redirect to frontend with success message
     return sendRedirect(event, `${process.env.APP_URL}/settings/crm?connected=salesforce`, 302)
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Salesforce callback error:', error)
 
     // Redirect to error page

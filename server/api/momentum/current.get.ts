@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       score: scoreData
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get current momentum score error:', error)
 
     if (error.statusCode) {

@@ -1,6 +1,19 @@
 import { eq, and, gte } from 'drizzle-orm'
 import { db, schema } from '~~/server/database'
 
+interface DocumentViewMetadata {
+  documentId?: string
+  fileName?: string
+  originalName?: string
+  documentType?: string
+  fileSize?: number
+  viewCount?: number
+  lastViewedAt?: string
+  userAgent?: string
+  ip?: string
+  referrer?: string
+}
+
 /**
  * Document view tracking endpoint
  * Tracks document views and creates signals
@@ -75,7 +88,7 @@ export default defineEventHandler(async (event) => {
 
     // Check if this specific document was viewed recently
     const recentView = existingSignals.find((signal) => {
-      const metadata = signal.metadata as any
+      const metadata = signal.metadata as DocumentViewMetadata | null
       return (
         metadata?.documentId === documentId
         && new Date().getTime() - new Date(signal.timestamp).getTime() < 3600000
@@ -84,7 +97,7 @@ export default defineEventHandler(async (event) => {
 
     if (recentView) {
       // Update existing signal with new view count
-      const metadata = recentView.metadata as any
+      const metadata = (recentView.metadata as DocumentViewMetadata | null) || {}
       const viewCount = (metadata.viewCount || 1) + 1
 
       await db
@@ -148,7 +161,7 @@ export default defineEventHandler(async (event) => {
 
     // Redirect to actual document
     return sendRedirect(event, document.filePath, 302)
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Document view tracking error:', error)
 
     if (error.statusCode) {
